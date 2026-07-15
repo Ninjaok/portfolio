@@ -1,65 +1,192 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import ProjectSection from "@/components/ProjectSection";
+import ProjectsIntro from "@/components/ProjectsIntro";
+import AboutMeSection from "@/components/AboutMeSection";
+import { slugify } from "@/lib/slugify";
+import { useLang } from "@/context/LangContext";
+import { translations } from "@/lib/translations";
+
+const projects = [
+  {
+    title: "Speedy",
+    shortDescKey: "speedyShort" as const,
+    descKey: "speedyLong" as const,
+    techStack: [
+      { label: "ROS 2" },
+      { label: "C++" },
+      { label: "Python" },
+      { label: "OpenCV" },
+    ],
+    images: [
+      "/images/speedy_1.png",
+      "/images/speedy_2.png",
+      "/images/speedy_3.png",
+      "/images/speedy_4.png",
+      "/images/speedy_5.png",
+      "/images/speedy_6.png",
+      "/images/speedy_7.png",
+    ],
+    participants: [
+      { name: "Luan Ribeiro", href: "https://github.com/Ninjaok" },
+      { name: "Nycolas Souza", href: "https://github.com/nycocado" },
+      { name: "Lohanne Guedes", href: "https://github.com/lohanneguedes" },
+      { name: "Kira Sousa", href: "https://github.com/Kira-Sousa" },
+    ],
+  },
+  {
+    title: "Wash Buddy",
+    shortDescKey: "washBuddyShort" as const,
+    descKey: "washBuddyLong" as const,
+    techStack: [
+      { label: "C++" },
+      { label: "Arduino" },
+      { label: "PlatformIO" },
+      { label: "FreeRTOS" },
+    ],
+    images: [
+      "/images/wash-buddy_1.png",
+      "/images/wash-buddy_2.png",
+      "/images/wash-buddy_3.png",
+      "/images/wash-buddy_4.png",
+      "/images/wash-buddy_5.png",
+      "/images/wash-buddy_6.png",
+      "/images/wash-buddy_7.png",
+    ],
+    participants: [
+      { name: "Luan Ribeiro", href: "https://github.com/Ninjaok" },
+      { name: "Nycolas Souza", href: "https://github.com/nycocado" },
+      { name: "Lohanne Guedes", href: "https://github.com/lohanneguedes" },
+      { name: "Kira Sousa", href: "https://github.com/Kira-Sousa" },
+    ],
+  },
+  {
+    title: "World of Toilets",
+    shortDescKey: "worldOfToiletsShort" as const,
+    descKey: "worldOfToiletsLong" as const,
+    techStack: [
+      { label: "Kotlin" },
+      { label: "NestJS" },
+      { label: "Flask" },
+      { label: "Docker" },
+    ],
+    images: [
+      "/images/wot.mp4",
+      "/images/wot_1.jpg",
+      "/images/wot_2.jpg",
+      "/images/wot_3.jpg",
+    ],
+    participants: [
+      { name: "Luan Ribeiro", href: "https://github.com/Ninjaok" },
+      { name: "Nycolas Souza", href: "https://github.com/nycocado" },
+      { name: "Lohanne Guedes", href: "https://github.com/lohanneguedes" },
+      { name: "Kira Sousa", href: "https://github.com/Kira-Sousa" },
+    ],
+  },
+  {
+    title: "CAPO",
+    shortDescKey: "capoShort" as const,
+    descKey: "capoLong" as const,
+    techStack: [
+      { label: "NestJS" },
+      { label: "Next.js" },
+      { label: "MariaDB" },
+      { label: "Socket.IO" },
+    ],
+    images: [
+      "/images/01-cut-workflow.gif",
+      "/images/02-assembly-workflow.gif",
+      "/images/03-weld-workflow.gif",
+      "/images/04-gating.gif",
+    ],
+    participants: [
+      { name: "Luan Ribeiro", href: "https://github.com/Ninjaok" },
+      { name: "Nycolas Souza", href: "https://github.com/nycocado" },
+      { name: "Lohanne Guedes", href: "https://github.com/lohanneguedes" },
+      { name: "Kira Sousa", href: "https://github.com/Kira-Sousa" },
+    ],
+  },
+  {
+    title: "Angry Duck",
+    shortDescKey: "angryDuckShort" as const,
+    descKey: "angryDuckLong" as const,
+    techStack: [
+      { label: "Cisco PT" },
+      { label: "Networking" },
+      { label: "IoT" },
+      { label: "RFID" },
+    ],
+    images: [],
+    participants: [
+      { name: "Luan Ribeiro", href: "https://github.com/Ninjaok" },
+      { name: "Adjami Regula", href: "https://github.com/CFZ13" },
+    ],
+  },
+  {
+    title: "Physics Simulator",
+    shortDescKey: "physicsSimShort" as const,
+    descKey: "physicsSimLong" as const,
+    techStack: [
+      { label: "C" },
+      { label: "GTK4" },
+      { label: "Cairo" },
+      { label: "Make" },
+    ],
+    images: [
+      "/images/kinematics-01.png",
+      "/images/kinematics-02.png",
+      "/images/dynamics-01.png",
+      "/images/dynamics-02.png",
+    ],
+    participants: [
+      { name: "Luan Ribeiro", href: "https://github.com/Ninjaok" },
+      { name: "Nycolas Souza", href: "https://github.com/nycocado" },
+      { name: "Lohanne Guedes", href: "https://github.com/lohanneguedes" },
+    ],
+  },
+];
+
+export default function HomePage() {
+  const { lang } = useLang();
+  const t = translations[lang];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main>
+      <ProjectsIntro
+        items={projects.map((p) => ({
+          title: p.title,
+          description: t[p.shortDescKey],
+          slug: slugify(p.title),
+        }))}
+      />
+
+      {projects.map((project) => (
+        <ProjectSection
+          key={project.title}
+          id={slugify(project.title)}
+          title={project.title}
+          description={t[project.descKey]}
+          techStack={project.techStack}
+          participants={project.participants}
+          images={project.images}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      ))}
+
+      <AboutMeSection />
+
+      <footer
+        style={{
+          padding: "24px 24px 48px",
+          textAlign: "center",
+          borderTop: "1px solid var(--border)",
+          backgroundColor: "var(--surface)",
+          color: "var(--subtext)",
+          fontSize: "14px",
+          fontWeight: 500,
+          letterSpacing: "0.02em",
+        }}>
+        © {new Date().getFullYear()} Luan Ribeiro. Todos os direitos reservados.
+      </footer>
+    </main>
   );
 }

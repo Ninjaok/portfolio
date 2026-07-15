@@ -1,26 +1,145 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F8F9FA;
+  --foreground: #212529;
+  --text: #212529;
+  --subtext: #6C757D;
+  --border: #DEE2E6;
+  --accent: #0D6EFD;
+  --surface: #FFFFFF;
+  
+  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
+}
+
+.dark {
+  --background: #121212;
+  --foreground: #E9ECEF;
+  --text: #E9ECEF;
+  --subtext: #ADB5BD;
+  --border: #343A40;
+  --accent: #339AF0;
+  --surface: #1E1E1E;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-text: var(--text);
+  --color-subtext: var(--subtext);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-surface: var(--surface);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-display), var(--font-sans), system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
 }
+
+@media (max-width: 860px) {
+  body {
+    flex-direction: column;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Text formatting guidelines */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+p, li, blockquote {
+  text-wrap: pretty;
+}
+
+/* Decorative Background Glow Auras */
+.aura-top, .aura-bottom {
+  position: fixed;
+  width: 55vw;
+  height: 55vw;
+  max-width: 600px;
+  max-height: 600px;
+  border-radius: 999px;
+  filter: blur(140px);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: -1;
+  transition: background-color 300ms ease, opacity 300ms ease;
+}
+
+.aura-top {
+  top: -15%;
+  right: -15%;
+  background: var(--accent);
+}
+
+.aura-bottom {
+  bottom: -15%;
+  left: -15%;
+  background: var(--subtext);
+}
+
+.dark .aura-top {
+  opacity: 0.1;
+}
+
+.dark .aura-bottom {
+  opacity: 0.06;
+}
+
+/* Scroll Progress Bar */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: var(--accent);
+  z-index: 9999;
+  width: 0%;
+  transition: width 100ms ease-out;
+}
+
+@keyframes grow-width {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    width: auto;
+    right: 0;
+    animation: grow-width auto linear;
+    animation-timeline: scroll(root);
+  }
+}
+

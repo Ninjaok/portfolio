@@ -1,0 +1,185 @@
+.intro {
+  --bg: var(--background);
+  --text: var(--text);
+  --subtext: var(--subtext);
+  --border: var(--border);
+  --accent: var(--accent);
+  --surface: var(--surface);
+
+  width: 100%;
+  background: var(--bg);
+  padding: 110px 40px 64px;
+  box-sizing: border-box;
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+.heading {
+  max-width: 1160px;
+  margin: 0 auto 36px;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 76px;
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: var(--text);
+}
+
+/* ---------- Barra de Filtros ---------- */
+
+.filterContainer {
+  max-width: 1160px;
+  margin: 0 auto 48px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.filterBtn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--subtext);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    transform 150ms ease;
+}
+
+.filterBtn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.filterBtnActive {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg) !important;
+  font-weight: 600;
+  box-shadow: 0 4px 12px -4px var(--accent);
+}
+
+/* ---------- Lista de Itens ---------- */
+
+.list {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.listItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 24px 28px;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    transform 200ms ease;
+}
+
+.listItem:hover {
+  background-color: var(--surface);
+  border-color: var(--border);
+  transform: translateX(4px);
+}
+
+.listTitle {
+  display: inline-flex;
+  align-items: baseline;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  transition: color 200ms ease;
+  white-space: nowrap;
+}
+
+.arrow {
+  display: inline-block;
+  margin-right: 0;
+  width: 0;
+  opacity: 0;
+  color: var(--accent);
+  transform: translateX(-8px);
+  transition:
+    width 220ms ease,
+    opacity 200ms ease,
+    transform 220ms ease,
+    margin-right 220ms ease;
+  overflow: hidden;
+}
+
+.listItem:hover .arrow {
+  width: 24px;
+  opacity: 1;
+  margin-right: 8px;
+  transform: translateX(0);
+}
+
+.listItem:hover .listTitle {
+  color: var(--accent);
+}
+
+.listDesc {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--subtext);
+  text-align: left;
+  transition: color 200ms ease;
+}
+
+.listItem:hover .listDesc {
+  color: var(--text);
+}
+
+/* ---------- Responsivo ---------- */
+
+@media (max-width: 860px) {
+  .heading {
+    font-size: 46px;
+    margin-bottom: 24px;
+  }
+
+  .filterContainer {
+    margin-bottom: 32px;
+  }
+
+  .listItem {
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .listItem:hover {
+    transform: none;
+  }
+
+  .listTitle {
+    font-size: 20px;
+    white-space: normal;
+  }
+
+  .listDesc {
+    text-align: left;
+    max-width: none;
+    font-size: 13.5px;
+  }
+}

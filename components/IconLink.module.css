@@ -1,0 +1,16 @@
+.iconLink {
+  color: var(--subtext);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 150ms ease;
+  text-decoration: none;
+}
+
+.iconLink:hover {
+  color: var(--text);
+}
