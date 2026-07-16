@@ -1,14 +1,22 @@
 "use client";
 
+import Image from "next/image";
 import { useSidebarState } from "@/context/SidebarContext";
-import { useLang } from "@/context/LangContext";
-import { translations } from "@/lib/translations";
+import { useTheme } from "@/context/ThemeContext";
+import { translations, type Lang } from "@/lib/translations";
 import styles from "./Sidebar.module.css";
 import IconLink from "./IconLink";
+import LanguageSwitcher from "./LanguageSwitcher";
 
-export default function Sidebar() {
+export default function Sidebar({
+  lang,
+  currentLocale,
+}: {
+  lang: Lang;
+  currentLocale: string;
+}) {
   const { state, setState } = useSidebarState();
-  const { lang, toggleLang } = useLang();
+  const { theme, toggleTheme } = useTheme();
   const t = translations[lang];
 
   const widthClass =
@@ -18,21 +26,12 @@ export default function Sidebar() {
         ? styles.expanded
         : styles.about;
 
-  const handleSidebarClick = (e: React.MouseEvent<HTMLElement>) => {
-    if (state === "compact") return;
-    const target = e.target as HTMLElement;
-    if (target.closest("a, button")) return;
-    setState("compact");
-  };
-
   const handleSeeMoreClick = () => {
     document.getElementById("about-me")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <aside
-      className={`${styles.sidebar} ${widthClass}`}
-      onClick={handleSidebarClick}>
+    <aside className={`${styles.sidebar} ${widthClass}`}>
       {state !== "compact" && (
         <button
           aria-label="Recolher sidebar"
@@ -46,16 +45,10 @@ export default function Sidebar() {
       {state === "compact" && (
         <div
           className={styles.compactInner}
-          onClick={() => setState("expanded")}
-          role="button"
-          tabIndex={0}
-          aria-label="Expandir sidebar"
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") setState("expanded");
-          }}>
+          onClick={() => setState("expanded")}>
           <span className={styles.verticalName}>Luan Ribeiro</span>
 
-          <div className={styles.iconStack}>
+          <div className={styles.iconStack} onClick={(e) => e.stopPropagation()}>
             <div className={styles.desktopOnly}>
               <IconLink href="https://www.linkedin.com/in/luan-kacio/" label="LinkedIn">
                 <LinkedInIcon />
@@ -67,7 +60,8 @@ export default function Sidebar() {
                 <GitHubIcon />
               </IconLink>
             </div>
-            <LangToggle lang={lang} onToggle={toggleLang} />
+            <LanguageSwitcher currentLocale={currentLocale} />
+            <ThemeToggle theme={theme} onToggle={toggleTheme} />
             <button
               className={styles.mobileMenuBtn}
               onClick={(e) => {
@@ -87,7 +81,13 @@ export default function Sidebar() {
           <div className={styles.expandedContent}>
             <div className={styles.avatarFrame}>
               <span className={styles.avatarMd}>
-                <img src="/images/profile.jpeg" alt="Luan Ribeiro" />
+                <Image
+                  src="/images/profile.jpeg"
+                  alt="Luan Ribeiro"
+                  fill
+                  sizes="240px"
+                  style={{ objectFit: "cover" }}
+                />
               </span>
             </div>
 
@@ -103,7 +103,7 @@ export default function Sidebar() {
               </div>
               <div className={styles.detailItem}>
                 <MailIcon />
-                <span>kacio.luansr@gmail.com</span>
+                <span>luan.kaciosr@gmail.com</span>
               </div>
             </div>
 
@@ -125,7 +125,8 @@ export default function Sidebar() {
             <IconLink href="https://github.com/Ninjaok" label="GitHub">
               <GitHubIcon />
             </IconLink>
-            <LangToggle lang={lang} onToggle={toggleLang} />
+            <LanguageSwitcher currentLocale={currentLocale} />
+            <ThemeToggle theme={theme} onToggle={toggleTheme} />
           </div>
         </div>
       )}
@@ -136,7 +137,13 @@ export default function Sidebar() {
           <div className={styles.aboutContent}>
             <div className={styles.avatarFrame}>
               <span className={styles.avatarLg}>
-                <img src="/images/profile_2.jpg" alt="Luan Ribeiro" />
+                <Image
+                  src="/images/profile_2.jpg"
+                  alt="Luan Ribeiro"
+                  fill
+                  sizes="320px"
+                  style={{ objectFit: "cover" }}
+                />
               </span>
             </div>
 
@@ -152,7 +159,7 @@ export default function Sidebar() {
               </div>
               <div className={styles.detailItem}>
                 <MailIcon />
-                <span>kacio.luansr@gmail.com</span>
+                <span>luan.kaciosr@gmail.com</span>
               </div>
             </div>
           </div>
@@ -167,7 +174,8 @@ export default function Sidebar() {
             <IconLink href="https://github.com/Ninjaok" label="GitHub">
               <GitHubIcon />
             </IconLink>
-            <LangToggle lang={lang} onToggle={toggleLang} />
+            <LanguageSwitcher currentLocale={currentLocale} />
+            <ThemeToggle theme={theme} onToggle={toggleTheme} />
           </div>
         </div>
       )}
@@ -177,11 +185,11 @@ export default function Sidebar() {
 
 /* ---------- Subcomponentes ---------- */
 
-function LangToggle({
-  lang,
+function ThemeToggle({
+  theme,
   onToggle,
 }: {
-  lang: "PT" | "EN";
+  theme: "light" | "dark";
   onToggle: () => void;
 }) {
   return (
@@ -190,10 +198,9 @@ function LangToggle({
         e.stopPropagation();
         onToggle();
       }}
-      aria-label="Alternar idioma"
-      className={styles.themeBtn}
-      style={{ fontWeight: "700", fontSize: "1.2rem", lineHeight: "1" }}>
-      {lang}
+      aria-label="Alternar tema claro/escuro"
+      className={styles.themeBtn}>
+      {theme === "dark" ? <SunIcon /> : <MoonIcon />}
     </button>
   );
 }
@@ -275,6 +282,23 @@ function LocationIcon() {
       strokeWidth="1.8">
       <path d="M12 21s-7-6.5-7-11a7 7 0 1 1 14 0c0 4.5-7 11-7 11z" strokeLinecap="round" strokeLinejoin="round" />
       <circle cx="12" cy="10" r="2.5" />
+    </svg>
+  );
+}
+
+function SunIcon() {
+  return (
+    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <circle cx="12" cy="12" r="4.5" />
+      <path d="M12 1.5v3M12 19.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1.5 12h3M19.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 1 0 11 11z" />
     </svg>
   );
 }

@@ -1,8 +1,6 @@
 "use client";
 
 import styles from "./ProjectsIntro.module.css";
-import { useLang } from "@/context/LangContext";
-import { translations } from "@/lib/translations";
 
 interface ProjectsIntroItem {
   title: string;
@@ -11,13 +9,11 @@ interface ProjectsIntroItem {
 }
 
 interface ProjectsIntroProps {
+  heading: string;
   items: ProjectsIntroItem[];
 }
 
-export default function ProjectsIntro({ items }: ProjectsIntroProps) {
-  const { lang } = useLang();
-  const t = translations[lang];
-
+export default function ProjectsIntro({ heading, items }: ProjectsIntroProps) {
   const handleClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     slug: string,
@@ -31,7 +27,7 @@ export default function ProjectsIntro({ items }: ProjectsIntroProps) {
 
   return (
     <section className={styles.intro}>
-      <h1 className={styles.heading}>{t.projectsHeading}</h1>
+      <h1 className={styles.heading}>{heading}</h1>
 
       <div className={styles.list}>
         {items.map((item) => (

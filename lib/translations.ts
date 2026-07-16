@@ -119,7 +119,143 @@ export const translations = {
     physicsSimShort: "A GTK4 desktop app simulating particle physics in kinematic and dynamic modes, with CSV export and project save/load.",
     physicsSimLong: "Physics Simulator is a GTK4 desktop application that models particle motion in two independent modes: kinematic, where particles follow constant-acceleration trajectories, and dynamic, where Newton's second law derives acceleration from configurable forces and gravity at each step. Built in C with Cairo for vector rendering, it supports auto-zoom and particle-follow camera modes, renders historical particle trails, and can save or load full simulation states as .sabino project files, with detailed per-particle CSV export for further analysis.",
   },
+  FR: {
+    // Sidebar
+    bio: "Ingénieur Informatique & Technicien en Mécanique | Data Science · Intelligence Artificielle | Python · SQL · Java",
+    aboutText: "Ingénieur Logiciel | Data Science & IA | Résoudre des problèmes avec du code, des mathématiques et de la curiosité",
+    aboutMeBtn: "À propos",
+
+    // ProjectsIntro
+    projectsHeading: "Projets",
+
+    // ProjectSection
+    participantsLabel: "Participants",
+
+    // AboutMeSection
+    aboutHeading: "À propos de moi",
+    aboutParagraph1: "Curieux de nature, j'aime résoudre des problèmes avec des données et du code. En dehors du travail, je partage mon temps entre la photographie argentique et le développement de jeux, toujours en train d'optimiser quelque chose. J'ai une réelle passion pour l'apprentissage, l'écriture, les voyages et la moto. Je travaille aussi dans la gestion, l'art et la publicité, et j'ai un emploi à temps partiel où j'apprends les textiles, les matériaux et je pratique mon anglais. Je m'intéresse aussi beaucoup à la mémorisation, aux systèmes électriques et à la mécanique.",
+    aboutParagraph2: "Mon focus technique actuel porte sur la <strong>Data Science et l'Intelligence Artificielle</strong>, avec le développement de solutions efficaces à l'aide d'écosystèmes comme Python, SQL, Java et C#.",
+    aboutParagraph3: "En dehors de l'environnement corporate et du développement logiciel commercial, je partage mon temps libre entre la précision calme de la <strong>photographie argentique 35mm</strong>, le processus créatif du <strong>développement de jeux indépendants</strong> et <strong>la course à pied</strong>, en cherchant toujours à optimiser et affiner chaque détail.",
+
+    focusEducationTitle: "Formation & Bases",
+    focusEducationDesc: "Technicien en Mécanique et Ingénierie Informatique (IADE).",
+    focusStackTitle: "Stack Principale",
+    focusStackDesc: "Python, SQL, Java, C#, C++ et informatique intelligente.",
+    focusCreativeTitle: "Intérêts Créatifs",
+    focusCreativeDesc: "Photographie argentique, Game Dev, course à pied, mémorisation, systèmes électriques et mécanique.",
+
+    // About - Education & Experience
+    educationTitle: "Formation Académique",
+    educationDegree: "Licence en Ingénierie Informatique",
+    educationSchool: "IADE — Université Européenne",
+    educationGrade: "Moyenne : 16",
+    educationDesc: "Licence en Ingénierie Informatique avec un cursus axé sur la résolution de problèmes réels grâce à la technologie. Le programme construit une base théorique solide en mathématiques et en logique, tout en mettant l'accent sur le développement pratique de logiciels et de matériel. Les matières couvrent des technologies de pointe, des systèmes distribués et des bases de données jusqu'à l'intelligence artificielle, la robotique et le prototypage de dispositifs IoT — préparant les diplômés à concevoir et construire des infrastructures technologiques robustes et complètes.",
+
+    activitiesTitle: "Activités & Représentation",
+    activity1: "Représentant du cursus d'Ingénierie Informatique | IADE (2024–2026) : principal lien entre les étudiants et l'administration, défendant les intérêts des étudiants et les améliorations académiques.",
+    activity2: "Délégué de classe — D1 et D2 | IADE (2023–2026) : soutien à l'organisation académique et à la communication entre collègues et enseignants.",
+    activity3: "Photographie argentique : pratique de la photographie sur film — prise de vue, mesure de la lumière, développement chimique et agrandissement en chambre noire.",
+
+    experienceTitle: "Expérience",
+    experienceRole: "Assistant de Vente",
+    experienceDesc: "Assistant de vente dans une boutique de vêtements classiques, assurant le service client en anglais et en français, avec un fort accent sur une communication claire, la connaissance des produits et une assistance personnalisée. Responsable de l'organisation du magasin, de la gestion des stocks et d'une expérience d'achat efficace et accueillante.",
+
+    // Project descriptions
+    speedyShort: "Speedy est un véhicule de course autonome conçu pour parcourir des pistes rapidement et intelligemment. Grâce à la vision par ordinateur et à l'intelligence artificielle, il suit le tracé, détecte les obstacles et prend des décisions en temps réel.",
+    speedyLong: "Speedy est un véhicule de course autonome développé pour concourir sur piste de manière rapide, sûre et totalement autonome. Construit comme projet de fin d'études de la Licence en Ingénierie Informatique de l'IADE - Université Européenne, le système intègre vision par ordinateur, intelligence artificielle et capteurs pour identifier la piste, reconnaître les obstacles et adapter la conduite en temps réel. Toute l'architecture a été consolidée sur un Raspberry Pi 4, rendant la plateforme plus efficace et réduisant la latence entre la perception de l'environnement et l'action du véhicule. Développé sur ROS 2 Jazzy, Speedy représente l'intégration du logiciel, de l'électronique et de la robotique dans une solution complète de navigation autonome, démontrant l'application pratique d'algorithmes de contrôle, de traitement d'image et de prise de décision dans des systèmes embarqués.",
+
+    washBuddyShort: "Un robot interactif qui transforme le lavage des mains en jeu pour les enfants grâce aux expressions faciales, aux mouvements et à un retour audio déclenché par RFID.",
+    washBuddyLong: "Wash Buddy est un robot interactif autonome qui guide les enfants à travers une routine de lavage des mains : toucher des jouets marqués RFID (savon, éponge, serviette) fait progresser une machine à états stricte — Idle → Wet → Soap → Scrub → Rinse → Dry → Success — avec des délais par étape calibrés selon de vraies recommandations, dont un minimum de 20 secondes de frottement suivant les recommandations OMS/CDC pour le lavage des mains. Un ESP32-WROOM-32 exécute un partage dual-core FreeRTOS : un cœur affiche un visage OLED animé de façon procédurale et des effets de particules à 60 FPS fixes, tandis que l'autre gère trois gestes basés sur des servomoteurs, les lectures RFID et des lignes vocales synchronisées. Un PCB personnalisé sépare les couches d'alimentation et de logique pour éloigner le bruit des moteurs des bus SPI/I2C, avec une mise en veille automatique pilotée par MOSFET pour éliminer la consommation en veille.",
+
+    worldOfToiletsShort: "Une application Android collaborative pour trouver des toilettes publiques propres et accessibles, avec des itinéraires piétons optimisés par IA et un backend tolérant aux pannes.",
+    worldOfToiletsLong: "World of Toilets est une application mobile qui aide les gens à localiser, noter et suggérer des toilettes publiques à Lisbonne. Construite en Kotlin avec Jetpack Compose, elle filtre les résultats selon des critères comme l'accessibilité et les tables à langer, et calcule des itinéraires piétons optimisés grâce à une recherche A* sur un graphe OpenStreetMap de 199 000 nœuds, avec une moyenne de 1,75s par requête lors de tests de charge et un taux de succès de 100%. Le backend exécute deux instances répliquées d'API NestJS et deux front-ends Next.js derrière un répartiteur de charge NGINX, appuyé par un cluster MariaDB Galera à trois nœuds en réplication synchrone multi-maître, avec authentification JWT, contrôle d'accès basé sur les rôles et mots de passe hachés en bcrypt.",
+
+    capoShort: "Un système de suivi d'atelier pour la fabrication de tuyauteries, avec des transferts d'étapes en temps réel entre découpe, assemblage et soudure.",
+    capoLong: "CAPO (Computer Aided Process Overview) numérise l'atelier de fabrication de tuyauteries métalliques, modélisant le travail selon une hiérarchie Projet → Isométrique → Spool → Joint → Pièce à travers trois étapes séquentielles : découpe, assemblage et soudure. Construit avec NestJS 11 utilisant CQRS et un modèle de domaine riche, chaque transition d'état est enregistrée comme un événement immuable, et les transferts d'étape sont dérivés — jamais stockés — de l'état des pièces elles-mêmes, afin que le pipeline ne perde jamais la synchronisation. Les événements de domaine se propagent via Socket.IO, de sorte que la fin d'une étape ouvre instantanément la suivante pour son opérateur sans recharger la page. Le front-end est Next.js 16 avec React Server Components, exécuté derrière un proxy inverse NGINX comme monorepo Bun-workspace.",
+
+    angryDuckShort: "Un plan d'infrastructure réseau pour un bâtiment intelligent de 6 étages, couvrant des systèmes de sécurité IoT et une simulation Cisco Packet Tracer.",
+    angryDuckLong: "Angry Duck est un projet de conception d'infrastructure réseau pour le siège de six étages et le bâtiment secondaire d'une entreprise avicole fictive, réalisé pour le cours de Réseaux et Communications de Données. Le plan couvre le câblage structuré, une dorsale double, des points d'accès Wi-Fi par étage et un datacenter centralisé, accompagnés de quatre sous-systèmes IoT modulaires — détection de gaz dangereux, extinction incendie, sécurité d'accès et contrôle de température — déployés à chaque étage. La topologie complète (2 routeurs, 9 commutateurs, 6 serveurs, 39 ordinateurs et 44 appareils IoT) a été modélisée et simulée dans Cisco Packet Tracer.",
+
+    physicsSimShort: "Une application de bureau GTK4 simulant la physique des particules en modes cinématique et dynamique, avec export CSV et sauvegarde/chargement de projets.",
+    physicsSimLong: "Physics Simulator est une application de bureau GTK4 qui modélise le mouvement de particules selon deux modes indépendants : cinématique, où les particules suivent des trajectoires à accélération constante, et dynamique, où la deuxième loi de Newton dérive l'accélération à partir de forces configurables et de la gravité à chaque pas. Construite en C avec Cairo pour le rendu vectoriel, elle prend en charge des modes de caméra à zoom automatique et de suivi de particules, affiche les traînées historiques des particules, et peut sauvegarder ou charger des états de simulation complets sous forme de fichiers de projet .sabino, avec un export CSV détaillé par particule pour analyse ultérieure.",
+  },
+  DE: {
+    // Sidebar
+    bio: "Informatikingenieur & Mechaniktechniker | Data Science · Künstliche Intelligenz | Python · SQL · Java",
+    aboutText: "Software-Ingenieur | Data Science & KI | Probleme lösen mit Code, Mathematik und Neugier",
+    aboutMeBtn: "Über mich",
+
+    // ProjectsIntro
+    projectsHeading: "Projekte",
+
+    // ProjectSection
+    participantsLabel: "Teilnehmer",
+
+    // AboutMeSection
+    aboutHeading: "Über mich",
+    aboutParagraph1: "Von Natur aus neugierig, löse ich gerne Probleme mit Daten und Code. Außerhalb der Arbeit verbringe ich meine Zeit zwischen analoger Fotografie und Spieleentwicklung und optimiere dabei ständig irgendetwas. Ich habe eine große Leidenschaft fürs Lernen, Schreiben, Reisen und Motorradfahren. Ich arbeite außerdem im Bereich Management, Kunst und Werbung und habe einen Nebenjob, bei dem ich mehr über Stoffe und Materialien lerne und mein Englisch übe. Ich interessiere mich auch stark für Gedächtnistechniken, elektrische Systeme und Mechanik.",
+    aboutParagraph2: "Mein aktueller technischer Schwerpunkt liegt auf <strong>Data Science und Künstlicher Intelligenz</strong>, wobei ich effiziente Lösungen mit Ökosystemen wie Python, SQL, Java und C# entwickle.",
+    aboutParagraph3: "Außerhalb des Unternehmensumfelds und der kommerziellen Softwareentwicklung teile ich meine Freizeit zwischen der ruhigen Präzision der <strong>analogen 35mm-Fotografie</strong>, dem kreativen Prozess der <strong>Indie-Spieleentwicklung</strong> und <strong>dem Laufen</strong> auf, stets bestrebt, jedes Detail zu optimieren und zu verfeinern.",
+
+    focusEducationTitle: "Ausbildung & Grundlagen",
+    focusEducationDesc: "Mechaniktechniker & Informatikingenieurwesen (IADE).",
+    focusStackTitle: "Haupt-Stack",
+    focusStackDesc: "Python, SQL, Java, C#, C++ und intelligentes Computing.",
+    focusCreativeTitle: "Kreative Interessen",
+    focusCreativeDesc: "Analoge Fotografie, Game Dev, Laufen, Gedächtnistechniken, elektrische Systeme & Mechanik.",
+
+    // About - Education & Experience
+    educationTitle: "Akademische Ausbildung",
+    educationDegree: "Bachelor in Informatikingenieurwesen",
+    educationSchool: "IADE — Europäische Universität",
+    educationGrade: "Note: 16",
+    educationDesc: "Bachelorabschluss in Informatikingenieurwesen mit einem Lehrplan, der sich auf die Lösung realer Probleme durch Technologie konzentriert. Das Programm baut ein solides theoretisches Fundament in Mathematik und Logik auf und legt gleichzeitig Wert auf praktische Software- und Hardwareentwicklung. Die Kursinhalte umfassen modernste Technologien, von verteilten Systemen und Datenbanken bis hin zu künstlicher Intelligenz, Robotik und dem Prototyping von IoT-Geräten — und bereiten Absolventen darauf vor, robuste, durchgängige technologische Infrastrukturen zu entwerfen und zu bauen.",
+
+    activitiesTitle: "Aktivitäten & Vertretung",
+    activity1: "Studiengangsvertreter Informatikingenieurwesen | IADE (2024–2026): Hauptansprechpartner zwischen Studierenden und Verwaltung, Vertretung der Studierendeninteressen und akademischer Verbesserungen.",
+    activity2: "Klassensprecher — D1 und D2 | IADE (2023–2026): Unterstützung der akademischen Organisation und Kommunikation zwischen Kommilitonen und Lehrkräften.",
+    activity3: "Analoge Fotografie: praktische Erfahrung mit Filmfotografie — Aufnahme, Lichtmessung, chemische Entwicklung und Vergrößerung in der Dunkelkammer.",
+
+    experienceTitle: "Erfahrung",
+    experienceRole: "Verkaufsassistent",
+    experienceDesc: "Verkaufsassistent in einem klassischen Modegeschäft, Kundenbetreuung auf Englisch und Französisch, mit starkem Fokus auf klare Kommunikation, Produktkenntnisse und persönliche Kundenbetreuung. Verantwortlich für die Organisation des Geschäfts, die Bestandskontrolle und ein effizientes, einladendes Einkaufserlebnis.",
+
+    // Project descriptions
+    speedyShort: "Speedy ist ein autonomes Rennfahrzeug, das entwickelt wurde, um Strecken schnell und intelligent zu navigieren. Mit Computer Vision und künstlicher Intelligenz folgt es der Strecke, erkennt Hindernisse und trifft Entscheidungen in Echtzeit.",
+    speedyLong: "Speedy ist ein autonomes Rennfahrzeug, das entwickelt wurde, um auf Strecken schnell, sicher und vollständig autonom zu fahren. Als Abschlussprojekt des Bachelorstudiengangs Informatikingenieurwesen an der IADE - Europäische Universität integriert das System Computer Vision, künstliche Intelligenz und Sensoren, um die Strecke zu erkennen, Hindernisse zu identifizieren und das Fahrverhalten in Echtzeit anzupassen. Die gesamte Architektur wurde auf einem Raspberry Pi 4 konsolidiert, was die Plattform effizienter macht und die Latenz zwischen Umgebungswahrnehmung und Fahrzeugaktion reduziert. Entwickelt auf ROS 2 Jazzy, steht Speedy für die Integration von Software, Elektronik und Robotik in einer vollständigen Lösung für autonome Navigation und zeigt die praktische Anwendung von Regelungsalgorithmen, Bildverarbeitung und Entscheidungsfindung in eingebetteten Systemen.",
+
+    washBuddyShort: "Ein interaktiver Roboter, der Händewaschen für Kinder durch Gesichtsausdrücke, Bewegung und RFID-ausgelöstes Audio-Feedback spielerisch gestaltet.",
+    washBuddyLong: "Wash Buddy ist ein autonomer interaktiver Roboter, der Kinder durch eine Händewaschroutine führt: Das Berühren von RFID-markiertem Spielzeug (Seife, Schwamm, Handtuch) bewegt eine strikte Zustandsmaschine voran — Idle → Wet → Soap → Scrub → Rinse → Dry → Success — mit Zeitlimits pro Schritt, die an reale Richtlinien angepasst sind, einschließlich einer Mindestschrubbdauer von 20 Sekunden gemäß WHO/CDC-Empfehlungen zum Händewaschen. Ein ESP32-WROOM-32 führt einen FreeRTOS-Dual-Core-Split aus: Ein Kern rendert ein prozedural animiertes OLED-Gesicht und Partikeleffekte mit festen 60 FPS, während der andere drei servobasierte Gesten, RFID-Lesevorgänge und synchronisierte Sprachzeilen steuert. Eine benutzerdefinierte Leiterplatte trennt Strom- und Logikebenen, um Motorrauschen von den SPI/I2C-Bussen fernzuhalten, mit MOSFET-gesteuerter automatischer Abschaltung zur Eliminierung des Standby-Verbrauchs.",
+
+    worldOfToiletsShort: "Eine crowdsourced Android-App zum Finden sauberer, barrierefreier öffentlicher Toiletten, mit KI-optimierten Fußwegen und einem fehlertoleranten Backend.",
+    worldOfToiletsLong: "World of Toilets ist eine mobile App, die Menschen hilft, öffentliche Toiletten in Lissabon zu finden, zu bewerten und vorzuschlagen. In Kotlin mit Jetpack Compose entwickelt, filtert sie Ergebnisse nach Kriterien wie Barrierefreiheit und Wickelmöglichkeiten und berechnet optimierte Fußwege mit einer A*-Suche über einen OpenStreetMap-Graphen mit 199.000 Knoten, mit durchschnittlich 1,75s pro Anfrage in Lasttests und einer Erfolgsquote von 100%. Das Backend betreibt zwei replizierte NestJS-API-Instanzen und zwei Next.js-Frontends hinter einem NGINX-Load-Balancer, unterstützt von einem dreiknotigen MariaDB-Galera-Cluster in synchroner Multi-Master-Replikation, mit JWT-Authentifizierung, rollenbasierter Zugriffskontrolle und bcrypt-gehashten Zugangsdaten.",
+
+    capoShort: "Ein Werkstattverfolgungssystem für die Rohrleitungsfertigung, mit Echtzeit-Übergaben zwischen Schneiden, Montage und Schweißen.",
+    capoLong: "CAPO (Computer Aided Process Overview) digitalisiert die Fertigungshalle einer Metallrohrleitungsfabrik und modelliert die Arbeit als Hierarchie Projekt → Isometrie → Spool → Verbindung → Teil über drei aufeinanderfolgende Phasen: Schneiden, Montage und Schweißen. Gebaut mit NestJS 11 unter Verwendung von CQRS und einem reichhaltigen Domänenmodell, wird jeder Zustandsübergang als unveränderliches Ereignis aufgezeichnet, und Phasenübergaben werden abgeleitet — niemals gespeichert — aus dem Zustand der Teile selbst, sodass die Pipeline nie außer Sync geraten kann. Domänenereignisse werden über Socket.IO propagiert, sodass der Abschluss einer Phase sofort die nächste für den Bediener öffnet, ohne die Seite neu zu laden. Das Frontend ist Next.js 16 mit React Server Components, das hinter einem NGINX-Reverse-Proxy als Bun-Workspace-Monorepo läuft.",
+
+    angryDuckShort: "Ein Netzwerkinfrastrukturplan für ein 6-stöckiges Smart Building, mit IoT-Sicherheitssystemen und Cisco-Packet-Tracer-Simulation.",
+    angryDuckLong: "Angry Duck ist ein Netzwerkinfrastruktur-Designprojekt für den sechsstöckigen Hauptsitz und das Nebengebäude eines fiktiven Geflügelunternehmens, erstellt für einen Kurs in Netzwerken und Datenkommunikation. Der Plan umfasst strukturierte Verkabelung, ein doppeltes Backbone, Wi-Fi-Zugangspunkte pro Stockwerk und ein zentralisiertes Rechenzentrum, zusammen mit vier modularen IoT-Subsystemen — Gefahrgaserkennung, Brandbekämpfung, Zugangssicherheit und Temperaturkontrolle — die auf jeder Etage eingesetzt werden. Die vollständige Topologie (2 Router, 9 Switches, 6 Server, 39 Computer und 44 IoT-Geräte) wurde in Cisco Packet Tracer modelliert und simuliert.",
+
+    physicsSimShort: "Eine GTK4-Desktop-App, die Partikelphysik in kinematischen und dynamischen Modi simuliert, mit CSV-Export und Projekt-Speichern/Laden.",
+    physicsSimLong: "Physics Simulator ist eine GTK4-Desktop-Anwendung, die Partikelbewegung in zwei unabhängigen Modi modelliert: kinematisch, bei dem Partikel Bahnen mit konstanter Beschleunigung folgen, und dynamisch, bei dem Newtons zweites Gesetz die Beschleunigung aus konfigurierbaren Kräften und Schwerkraft bei jedem Schritt ableitet. In C mit Cairo für Vektorrendering gebaut, unterstützt sie automatische Zoom- und Partikelverfolgungs-Kameramodi, rendert historische Partikelspuren und kann vollständige Simulationszustände als .sabino-Projektdateien speichern oder laden, mit detailliertem CSV-Export pro Partikel zur weiteren Analyse.",
+  },
 } as const;
 
-export type Lang = "PT" | "EN";
+export type Lang = "PT" | "EN" | "FR" | "DE";
 export type TranslationKey = keyof typeof translations.PT;
+export type Translations = (typeof translations)[Lang];
+
+// Single source of truth for supported locales — used by routing (proxy,
+// layout) and the language switcher UI.
+export const LOCALES = [
+  { code: "pt", lang: "PT" as const, label: "PT", name: "Português" },
+  { code: "en", lang: "EN" as const, label: "EN", name: "English" },
+  { code: "fr", lang: "FR" as const, label: "FR", name: "Français" },
+  { code: "de", lang: "DE" as const, label: "DE", name: "Deutsch" },
+] as const;
+
+export type LocaleCode = (typeof LOCALES)[number]["code"];
+
+export function localeToLang(locale: string): Lang {
+  return LOCALES.find((l) => l.code === locale)?.lang ?? "PT";
+}

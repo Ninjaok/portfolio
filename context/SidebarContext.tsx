@@ -1,12 +1,19 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from "react";
 
 export type SidebarState = "compact" | "expanded" | "about";
 
 interface SidebarContextValue {
   state: SidebarState;
-  setState: (state: SidebarState) => void;
+  setState: Dispatch<SetStateAction<SidebarState>>;
 }
 
 const SidebarContext = createContext<SidebarContextValue | null>(null);

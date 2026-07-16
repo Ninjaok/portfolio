@@ -15,8 +15,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");
 
   useEffect(() => {
+    // Can't read localStorage during the initial render (server has no access to it),
+    // so this one-time sync has to happen post-mount instead of via a lazy useState
+    // initializer — the actual theme class is already applied pre-hydration by the
+    // inline script in layout.tsx, this just brings React state in line with it.
     const savedTheme = localStorage.getItem("theme") as Theme | null;
     if (savedTheme) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTheme(savedTheme);
     } else {
       const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;

@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  height: 100dvh;
   border-right: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
@@ -195,6 +195,7 @@
 
 .avatarMd,
 .avatarLg {
+  position: relative;
   border-radius: 999px;
   overflow: hidden;
   border: 2px solid var(--accent);
@@ -277,6 +278,7 @@
 /* ---------- Toggle de tema ---------- */
 
 .themeBtn {
+  position: relative;
   color: var(--subtext);
   background: none;
   border: none;
@@ -285,9 +287,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
   transition:
     color 150ms ease,
     transform 150ms ease;
+}
+
+/* Expand the tap target to ~44px without growing the visible "PT"/"EN" label
+   or throwing off alignment with the sibling icon links in the row */
+.themeBtn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
 }
 
 .themeBtn:hover {
@@ -363,7 +378,7 @@
     right: 0;
     bottom: 0;
     width: 100vw !important;
-    height: 100vh !important;
+    height: 100dvh !important;
     z-index: 100;
     flex-direction: column !important;
     background: var(--bg);
@@ -405,7 +420,9 @@
     cursor: pointer;
     font-size: 28px;
     color: var(--text);
-    padding: 0;
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
     transition: transform 150ms ease;
   }
 
