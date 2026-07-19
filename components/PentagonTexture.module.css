@@ -7,8 +7,11 @@
      esquerda fica por baixo da sidebar (z-index 10 > 0). */
   position: absolute;
   top: 0;
-  bottom: 0;
   right: 0;
+  /* height EXPLÍCITO, não top+bottom: o <svg> é replaced element — com
+     height:auto e contain:strict a altura intrínseca conta como 0 e o
+     bottom é ignorado, colapsando a camada para 0px (padrão invisível). */
+  height: 100%;
   width: 100%;
   color: var(--accent);
   opacity: 0.22;
