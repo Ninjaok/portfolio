@@ -1,25 +1,66 @@
 @import "tailwindcss";
 
+/* Regista --mx/--my como <length> animável: permite que a mudança de valor
+   (feita via JS em cada mousemove) seja interpolada suavemente pelo browser
+   quando combinada com uma `transition`, em vez de saltar instantaneamente
+   para a nova posição — é o que torna o "buraco" da PentagonTexture gradual. */
+@property --mx {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: -9999px;
+}
+
+@property --my {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: -9999px;
+}
+
+/* Tema verde-oliva (ver modelo/TEMA.md): tokens claro/escuro.
+   --ink é fixo nos dois temas (fundo do About Me e do footer). */
 :root {
-  --background: #F8F9FA;
-  --foreground: #212529;
-  --text: #212529;
-  --subtext: #6C757D;
-  --border: #DEE2E6;
-  --accent: #0D6EFD;
-  --surface: #FFFFFF;
-  
+  --background: #f4f4ec;
+  --foreground: #2b2e1f;
+  --text: #2b2e1f;
+  --subtext: #6b6f56;
+  --border: #e2e3d6;
+  --accent: #6b7a3f;
+  --surface: #ffffff;
+  --ink: #2b2e1f;
+  --hero: #dde0c9;
+  --alt: #eceddf;
+  --caro: #dfe0d2;
+  --badge: #e9ebdb;
+  --badge-fg: #3d4527;
+  --badge-bd: #c4c8ac;
+  --cta-bg: #2b2e1f;
+  --cta-fg: #f4f4ec;
+  --card-shadow: 0 10px 26px rgba(43, 46, 31, 0.14);
+  --card-shadow-on: 0 18px 40px rgba(0, 0, 0, 0.3);
+
   transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
 }
 
 .dark {
-  --background: #121212;
-  --foreground: #E9ECEF;
-  --text: #E9ECEF;
-  --subtext: #ADB5BD;
-  --border: #343A40;
-  --accent: #339AF0;
-  --surface: #1E1E1E;
+  --background: #1c1e13;
+  --foreground: #ecedde;
+  --text: #ecedde;
+  --subtext: #a7ab8c;
+  --border: #3d4128;
+  --accent: #a8b57a;
+  --surface: #282b1b;
+  --ink: #2b2e1f;
+  --hero: #222516;
+  --alt: #202315;
+  --caro: #262917;
+  --badge: #31351e;
+  --badge-fg: #c9cfa8;
+  --badge-bd: #4a4f30;
+  /* CTA invertido no escuro para manter contraste ≥ 4.5:1 */
+  --cta-bg: #dfe3c0;
+  --cta-fg: #23261a;
+  --card-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+  --card-shadow-on: 0 18px 40px rgba(0, 0, 0, 0.3);
 }
 
 @theme inline {
@@ -30,6 +71,7 @@
   --color-border: var(--border);
   --color-accent: var(--accent);
   --color-surface: var(--surface);
+  --color-ink: var(--ink);
 }
 
 * {
@@ -43,7 +85,8 @@ html {
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-display), var(--font-sans), system-ui, -apple-system, sans-serif;
+  /* Corpo em Inter; títulos usam var(--font-display) (Playfair Display) */
+  font-family: var(--font-inter), Inter, system-ui, -apple-system, sans-serif;
   min-height: 100dvh;
   margin: 0;
   display: flex;

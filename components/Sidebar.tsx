@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import { useSidebarState } from "@/context/SidebarContext";
 import { useTheme } from "@/context/ThemeContext";
@@ -8,45 +9,99 @@ import styles from "./Sidebar.module.css";
 import IconLink from "./IconLink";
 import LanguageSwitcher from "./LanguageSwitcher";
 
+/* Paleta própria da sidebar (ver modelo/TEMA.md): sempre oliva escura,
+   independente do tema claro/escuro da página. Alpha 0.97: a cor lê-se como
+   verde-escuro ESTÁTICO nos dois temas (a contribuição do fundo é ~3%,
+   impercetível), mantendo só um resto do efeito fosco (blur no CSS). */
+const SIDEBAR_COLORS = {
+  bg: "rgba(43, 46, 31, 0.97)",
+  name: "#f2f0e4",
+  subtext: "#c3c6a9",
+  info: "#d5d8bd",
+  border: "#454a30",
+  icon: "#e4e6d3",
+};
+
 export default function Sidebar({
   lang,
   currentLocale,
+  accentColor = "#a8b57a",
 }: {
   lang: Lang;
   currentLocale: string;
+  /** Tweak: accent color used for the accent border/hover states. */
+  accentColor?: string;
 }) {
   const { state, setState } = useSidebarState();
-  const { theme, toggleTheme } = useTheme();
   const t = translations[lang];
+  // "Partilhar": troca a foto de perfil por um QR code para www.ninja0k.com,
+  // nos estados expandido e about.
+  const [showQr, setShowQr] = useState(false);
 
-  const widthClass =
-    state === "compact"
-      ? styles.compact
-      : state === "expanded"
-        ? styles.expanded
-        : styles.about;
+  // No desktop o modelo abre expandida; no mobile "expanded" é o menu
+  // fullscreen, por isso o estado inicial (SSR) fica compacto e só
+  // expandimos no cliente quando há espaço.
+  useEffect(() => {
+    if (window.innerWidth >= 860) {
+      setState((prev) => (prev === "compact" ? "expanded" : prev));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleSeeMoreClick = () => {
+  const widthClass = state === "compact" ? styles.compact : styles.expanded;
+  const isAbout = state === "about";
+  const colors = SIDEBAR_COLORS;
+
+  // No mobile o estado expandido/about é um menu fullscreen: fechar deve ir
+  // direto para o topbar compacto (um toque), e os atalhos devem FECHAR o
+  // menu antes de rolar — senão a página rola escondida atrás do menu.
+  const isMobileViewport = () =>
+    typeof window !== "undefined" && window.innerWidth < 860;
+
+  const handleChevronClick = () => {
+    if (state === "compact") setState("expanded");
+    else if (isMobileViewport()) setState("compact");
+    else if (state === "about") setState("expanded");
+    else setState("compact");
+  };
+
+  const handleAboutClick = () => {
+    setState(isMobileViewport() ? "compact" : "about");
     document.getElementById("about-me")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleProjectsClick = () => {
+    setState(isMobileViewport() ? "compact" : "expanded");
+    document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const sidebarVars = {
+    "--sb-bg": colors.bg,
+    "--sb-name": colors.name,
+    "--sb-subtext": colors.subtext,
+    "--sb-info": colors.info,
+    "--sb-border": colors.border,
+    "--sb-icon": colors.icon,
+    "--sb-accent": accentColor,
+  } as CSSProperties;
+
   return (
-    <aside className={`${styles.sidebar} ${widthClass}`}>
-      {state !== "compact" && (
-        <button
-          aria-label="Recolher sidebar"
-          onClick={() => setState("compact")}
-          className={styles.collapseBtn}>
-          <ChevronLeftIcon />
-        </button>
-      )}
+    <aside className={`${styles.sidebar} ${widthClass}`} style={sidebarVars}>
+      <button
+        aria-label={state === "compact" ? "Expandir sidebar" : "Recolher sidebar"}
+        onClick={handleChevronClick}
+        className={`${styles.collapseBtn} ${state === "compact" ? styles.collapseBtnExpand : ""}`}>
+        <ChevronLeftIcon />
+      </button>
 
       {/* ---------- ESTADO COMPACTO ---------- */}
       {state === "compact" && (
         <div
           className={styles.compactInner}
           onClick={() => setState("expanded")}>
-          <span className={styles.verticalName}>Luan Ribeiro</span>
+          <div className={styles.nameWrap}>
+            <span className={styles.verticalName}>Luan Ribeiro</span>
+          </div>
 
           <div className={styles.iconStack} onClick={(e) => e.stopPropagation()}>
             <div className={styles.desktopOnly}>
@@ -61,7 +116,7 @@ export default function Sidebar({
               </IconLink>
             </div>
             <LanguageSwitcher currentLocale={currentLocale} />
-            <ThemeToggle theme={theme} onToggle={toggleTheme} />
+            <ThemeToggle />
             <button
               className={styles.mobileMenuBtn}
               onClick={(e) => {
@@ -75,25 +130,39 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* ---------- ESTADO EXPANDIDO ---------- */}
-      {state === "expanded" && (
+      {/* ---------- ESTADO EXPANDIDO / ABOUT ----------
+          "about" é idêntico ao expandido: mesmo conteúdo, apenas oculta o
+          botão "About me" (o chevron volta para "expanded", não "compact"). */}
+      {(state === "expanded" || isAbout) && (
         <div className={styles.expandedWrapper}>
           <div className={styles.expandedContent}>
             <div className={styles.avatarFrame}>
-              <span className={styles.avatarMd}>
-                <Image
-                  src="/images/profile.jpeg"
-                  alt="Luan Ribeiro"
-                  fill
-                  sizes="240px"
-                  style={{ objectFit: "cover" }}
-                />
-              </span>
+              {showQr ? (
+                /* "Partilhar" ativo: o QR substitui a foto no mesmo espaço */
+                <div
+                  className={styles.qrCard}
+                  role="img"
+                  aria-label="QR code — www.ninja0k.com">
+                  <QrSvg />
+                </div>
+              ) : (
+                <span className={styles.avatarMd}>
+                  {/* Foto e descrição alternam no estado "about" (comportamento
+                      do site original: profile_2 + aboutText na secção About) */}
+                  <Image
+                    src={isAbout ? "/images/profile_2.jpg" : "/images/profile.jpeg"}
+                    alt="Luan Ribeiro"
+                    fill
+                    sizes="260px"
+                    style={{ objectFit: "cover" }}
+                  />
+                </span>
+              )}
             </div>
 
             <div className={styles.infoBlock}>
               <h2 className={styles.name}>Luan Ribeiro</h2>
-              <p className={styles.bio}>{t.bio}</p>
+              <p className={styles.bio}>{isAbout ? t.aboutText : t.bio}</p>
             </div>
 
             <div className={styles.sidebarDetails}>
@@ -107,12 +176,27 @@ export default function Sidebar({
               </div>
             </div>
 
-            <button
-              className={styles.moreBtn}
-              onClick={handleSeeMoreClick}
-              aria-label={t.aboutMeBtn}>
-              {t.aboutMeBtn}
-            </button>
+            {/* Sem estado "ativo" visual — apenas o efeito de hover. */}
+            <nav className={styles.miniIndex} aria-label="Atalhos">
+              <div className={styles.miniIndexRow}>
+                <button
+                  className={styles.miniIndexItem}
+                  onClick={handleProjectsClick}>
+                  {t.projectsNavLabel}
+                </button>
+                <button
+                  className={styles.miniIndexItem}
+                  onClick={handleAboutClick}>
+                  {t.aboutMeBtn}
+                </button>
+              </div>
+              <button
+                className={styles.miniIndexItem}
+                onClick={() => setShowQr((v) => !v)}
+                aria-pressed={showQr}>
+                {t.shareBtn}
+              </button>
+            </nav>
           </div>
 
           <div className={styles.iconRowBottom}>
@@ -126,56 +210,7 @@ export default function Sidebar({
               <GitHubIcon />
             </IconLink>
             <LanguageSwitcher currentLocale={currentLocale} />
-            <ThemeToggle theme={theme} onToggle={toggleTheme} />
-          </div>
-        </div>
-      )}
-
-      {/* ---------- ESTADO ABOUT ME ---------- */}
-      {state === "about" && (
-        <div className={styles.aboutWrapper}>
-          <div className={styles.aboutContent}>
-            <div className={styles.avatarFrame}>
-              <span className={styles.avatarLg}>
-                <Image
-                  src="/images/profile_2.jpg"
-                  alt="Luan Ribeiro"
-                  fill
-                  sizes="320px"
-                  style={{ objectFit: "cover" }}
-                />
-              </span>
-            </div>
-
-            <div className={styles.infoBlock}>
-              <h2 className={styles.nameLg}>Luan Ribeiro</h2>
-              <p className={styles.bioLg}>{t.aboutText}</p>
-            </div>
-
-            <div className={styles.sidebarDetails}>
-              <div className={styles.detailItem}>
-                <LocationIcon />
-                <span>Lisboa, PT</span>
-              </div>
-              <div className={styles.detailItem}>
-                <MailIcon />
-                <span>luan.kaciosr@gmail.com</span>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.iconRowBottom}>
-            <IconLink href="https://www.linkedin.com/in/luan-kacio/" label="LinkedIn">
-              <LinkedInIcon />
-            </IconLink>
-            <IconLink href="https://www.instagram.com/kacio_luan/" label="Instagram">
-              <InstagramIcon />
-            </IconLink>
-            <IconLink href="https://github.com/Ninjaok" label="GitHub">
-              <GitHubIcon />
-            </IconLink>
-            <LanguageSwitcher currentLocale={currentLocale} />
-            <ThemeToggle theme={theme} onToggle={toggleTheme} />
+            <ThemeToggle />
           </div>
         </div>
       )}
@@ -185,23 +220,38 @@ export default function Sidebar({
 
 /* ---------- Subcomponentes ---------- */
 
-function ThemeToggle({
-  theme,
-  onToggle,
-}: {
-  theme: "light" | "dark";
-  onToggle: () => void;
-}) {
+/* Toggle do tema claro/escuro da página: sol quando o tema claro está
+   ativo, lua quando o escuro está ativo (ver modelo/TEMA.md). */
+function ThemeToggle() {
+  const { theme, toggleTheme } = useTheme();
   return (
     <button
       onClick={(e) => {
         e.stopPropagation();
-        onToggle();
+        toggleTheme();
       }}
       aria-label="Alternar tema claro/escuro"
       className={styles.themeBtn}>
-      {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+      {theme === "dark" ? <MoonIcon /> : <SunIcon />}
     </button>
+  );
+}
+
+/* QR de https://www.ninja0k.com, gerado offline (npx qrcode, ECC M,
+   margem 2) e embutido como SVG estático — sem dependência de runtime.
+   viewBox 29 = 25 módulos + 2 de zona de silêncio por lado. */
+function QrSvg() {
+  return (
+    <svg
+      viewBox="0 0 29 29"
+      shapeRendering="crispEdges"
+      aria-hidden="true"
+      focusable="false">
+      <path
+        stroke="currentColor"
+        d="M2 2.5h7m7 0h1m3 0h7M2 3.5h1m5 0h1m3 0h1m4 0h2m1 0h1m5 0h1M2 4.5h1m1 0h3m1 0h1m1 0h1m3 0h1m2 0h1m2 0h1m1 0h3m1 0h1M2 5.5h1m1 0h3m1 0h1m1 0h4m1 0h3m2 0h1m1 0h3m1 0h1M2 6.5h1m1 0h3m1 0h1m1 0h1m3 0h2m2 0h1m1 0h1m1 0h3m1 0h1M2 7.5h1m5 0h1m1 0h6m1 0h1m2 0h1m5 0h1M2 8.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M10 9.5h1m5 0h1M2 10.5h1m1 0h5m2 0h1m1 0h3m4 0h5M3 11.5h2m4 0h1m2 0h1m1 0h2m2 0h2m1 0h1m3 0h1M2 12.5h1m1 0h2m2 0h2m1 0h2m2 0h3m1 0h5m1 0h2M3 13.5h3m3 0h3m1 0h1m4 0h2m1 0h1m4 0h1M2 14.5h2m2 0h1m1 0h1m2 0h1m2 0h3m2 0h4m1 0h3M2 15.5h2m1 0h1m1 0h1m1 0h4m5 0h2m1 0h1m1 0h1m1 0h1M2 16.5h1m5 0h2m2 0h4m1 0h7m1 0h2M2 17.5h1m3 0h2m1 0h1m2 0h2m2 0h2m1 0h1m1 0h2m3 0h1M2 18.5h1m1 0h3m1 0h1m4 0h1m1 0h2m1 0h5m1 0h1M10 19.5h1m1 0h1m1 0h2m1 0h2m3 0h2M2 20.5h7m2 0h2m2 0h2m1 0h1m1 0h1m1 0h1m1 0h3M2 21.5h1m5 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m3 0h2m1 0h1M2 22.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h9m1 0h3M2 23.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h2m1 0h1m1 0h5M2 24.5h1m1 0h3m1 0h1m1 0h2m1 0h2m1 0h1m1 0h1m4 0h2m1 0h1M2 25.5h1m5 0h1m2 0h3m2 0h4m1 0h3m2 0h1M2 26.5h7m1 0h5m6 0h6"
+      />
+    </svg>
   );
 }
 
@@ -297,8 +347,8 @@ function SunIcon() {
 
 function MoonIcon() {
   return (
-    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 1 0 11 11z" />
+    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

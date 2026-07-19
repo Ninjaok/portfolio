@@ -3,20 +3,21 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import styles from "./AboutMeSection.module.css";
-import { useSidebarState } from "@/context/SidebarContext";
 import type { Lang, Translations } from "@/lib/translations";
+import { imageDescription } from "@/lib/imageDescriptions";
 import ImageLightbox from "./ImageLightbox";
+import PentagonTexture from "./PentagonTexture";
 
 const HOBBY_IMAGES = [
-  { src: "/images/hobby_0.jpg", caption: "" },
-  { src: "/images/hobby_1.jpg", caption: "" },
-  { src: "/images/hobby_2.jpg", caption: "" },
-  { src: "/images/hobby_3.jpg", caption: "" },
-  { src: "/images/hobby_4.jpg", caption: "" },
-  { src: "/images/hobby_5.jpg", caption: "" },
-  { src: "/images/hobby_6.jpg", caption: "" },
-  { src: "/images/hobby_7.jpg", caption: "" },
-  { src: "/images/hobby_8.jpg", caption: "" },
+  { src: "/images/hobby_0.jpg" },
+  { src: "/images/hobby_1.jpg" },
+  { src: "/images/hobby_2.jpg" },
+  { src: "/images/hobby_3.jpg" },
+  { src: "/images/hobby_4.jpg" },
+  { src: "/images/hobby_5.jpg" },
+  { src: "/images/hobby_6.jpg" },
+  { src: "/images/hobby_7.jpg" },
+  { src: "/images/hobby_8.jpg" },
 ];
 
 export default function AboutMeSection({
@@ -26,10 +27,11 @@ export default function AboutMeSection({
   lang: Lang;
   t: Translations;
 }) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const { setState } = useSidebarState();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  // Clique na biografia: atenua gradualmente o padrão de fundo só na área
+  // do texto (mesma "física" da descrição em ProjectSection).
+  const [isBioDimmed, setIsBioDimmed] = useState(false);
 
   const goToNext = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % HOBBY_IMAGES.length);
@@ -86,73 +88,12 @@ export default function AboutMeSection({
     return () => clearInterval(interval);
   }, []);
 
-  // Sidebar auto-expand/collapse based on section visibility.
-  // Triggers on the section's edge crossing a fixed band of the viewport
-  // (rootMargin) rather than a visible-area ratio: a ratio threshold reacts to
-  // the section's own height, which itself changes when this state flips the
-  // sidebar width and the layout reflows — that coupling caused an
-  // expand/collapse oscillation loop at tablet widths. Using the functional
-  // setState form also keeps `state` out of the deps array, so the observer
-  // is created once on mount instead of being torn down and recreated (each
-  // recreation re-fires IntersectionObserver's initial callback) every time
-  // the sidebar state changes.
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (window.innerWidth < 860) return;
-        if (entry.isIntersecting) {
-          setState("about");
-        } else {
-          setState((prev) => (prev === "about" ? "compact" : prev));
-        }
-      },
-      { rootMargin: "-40% 0px -40% 0px", threshold: 0 },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [setState]);
-
   return (
-    <section id="about-me" ref={sectionRef} className={styles.section}>
+    <section id="about-me" className={styles.section}>
+      <PentagonTexture />
       <div className={styles.container}>
-        {/* Coluna Esquerda: Conteúdo de Biografia */}
-        <div className={styles.bioCol}>
-          <h2 className={styles.heading}>{t.aboutHeading}</h2>
-
-          <div className={styles.bioParagraphs}>
-            <p className={styles.bioText}>{t.aboutParagraph1}</p>
-            <p
-              className={styles.bioText}
-              dangerouslySetInnerHTML={{ __html: t.aboutParagraph2 }}
-            />
-            <p
-              className={styles.bioText}
-              dangerouslySetInnerHTML={{ __html: t.aboutParagraph3 }}
-            />
-          </div>
-
-          <div className={styles.focusGrid}>
-            <div className={styles.focusCard}>
-              <h3 className={styles.focusTitle}>{t.focusEducationTitle}</h3>
-              <p className={styles.focusDesc}>{t.focusEducationDesc}</p>
-            </div>
-            <div className={styles.focusCard}>
-              <h3 className={styles.focusTitle}>{t.focusStackTitle}</h3>
-              <p className={styles.focusDesc}>{t.focusStackDesc}</p>
-            </div>
-            <div className={styles.focusCard}>
-              <h3 className={styles.focusTitle}>{t.focusCreativeTitle}</h3>
-              <p className={styles.focusDesc}>{t.focusCreativeDesc}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Coluna Direita: Carrossel de Hobbies */}
-        <div className={styles.rightCol}>
+        {/* Coluna Esquerda: Carrossel de Hobbies (foto 4/5, modelo) */}
+        <div className={styles.photoCol}>
           <div className={styles.carouselContainer}>
             <div
               className={styles.imageFrame}
@@ -168,15 +109,15 @@ export default function AboutMeSection({
                 draggable={false}
                 fill
                 sizes="420px"
-                style={{ objectFit: "contain" }}
+                style={{ objectFit: "cover" }}
                 loading="lazy"
               />
               <div className={styles.badgeCounter}>
                 {activeIndex + 1} / {HOBBY_IMAGES.length}
               </div>
-              {HOBBY_IMAGES[activeIndex].caption && (
+              {imageDescription(HOBBY_IMAGES[activeIndex].src, lang) && (
                 <span className={styles.photoCaption}>
-                  {HOBBY_IMAGES[activeIndex].caption}
+                  {imageDescription(HOBBY_IMAGES[activeIndex].src, lang)}
                 </span>
               )}
 
@@ -221,6 +162,42 @@ export default function AboutMeSection({
                   />
                 ))}
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Coluna Direita: eyebrow + nome + biografia + áreas (modelo) */}
+        <div className={styles.bioCol}>
+          <div className={styles.eyebrow}>{t.aboutHeading}</div>
+          <h2 className={styles.heading}>Luan Ribeiro</h2>
+
+          <div
+            className={`${styles.bioParagraphs} ${isBioDimmed ? styles.bioParagraphsDimmed : ""}`}
+            onClick={() => setIsBioDimmed((v) => !v)}
+          >
+            <p className={styles.bioText}>{t.aboutParagraph1}</p>
+            <p
+              className={styles.bioText}
+              dangerouslySetInnerHTML={{ __html: t.aboutParagraph2 }}
+            />
+            <p
+              className={styles.bioText}
+              dangerouslySetInnerHTML={{ __html: t.aboutParagraph3 }}
+            />
+          </div>
+
+          <div className={styles.areas}>
+            <div className={styles.area}>
+              <div className={styles.areaKicker}>01 — {t.focusEducationTitle}</div>
+              <div className={styles.areaBody}>{t.focusEducationDesc}</div>
+            </div>
+            <div className={styles.area}>
+              <div className={styles.areaKicker}>02 — {t.focusStackTitle}</div>
+              <div className={styles.areaBody}>{t.focusStackDesc}</div>
+            </div>
+            <div className={styles.area}>
+              <div className={styles.areaKicker}>03 — {t.focusCreativeTitle}</div>
+              <div className={styles.areaBody}>{t.focusCreativeDesc}</div>
             </div>
           </div>
         </div>

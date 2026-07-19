@@ -1,0 +1,71 @@
+/* Camada decorativa: sempre var(--accent) — já é escura no tema claro e
+   clara no escuro, igual ao eyebrow "PORTFOLIO · 2026" (ver ProjectsIntro). */
+.texture {
+  /* Ancorada à DIREITA com largura fixa (inline, = viewport + folga): a
+     borda direita da secção é a do viewport e não se move com a sidebar,
+     então a camada — e o padrão — ficam imóveis no ecrã. O excesso à
+     esquerda fica por baixo da sidebar (z-index 10 > 0). */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  color: var(--accent);
+  opacity: 0.22;
+  pointer-events: none;
+  z-index: 0;
+  /* Isola layout+paint desta camada: o vetor pesado não participa no
+     reflow do resto da página (importante durante a animação da sidebar). */
+  contain: strict;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  /* Mesmo alcance (780px), intensidade +20% sobre a metade anterior: sob o
+     cursor o padrão cai para 40% (remoção de 60% = 50% × 1.2), com cada
+     passo intermédio escalado na mesma proporção. */
+  mask-image: radial-gradient(
+    circle 780px at var(--mx, -99999px) var(--my, -99999px),
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.47) 22%,
+    rgba(0, 0, 0, 0.64) 46%,
+    rgba(0, 0, 0, 0.82) 66%,
+    rgba(0, 0, 0, 0.94) 84%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle 780px at var(--mx, -99999px) var(--my, -99999px),
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.47) 22%,
+    rgba(0, 0, 0, 0.64) 46%,
+    rgba(0, 0, 0, 0.82) 66%,
+    rgba(0, 0, 0, 0.94) 84%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  /* --mx/--my (registadas em globals.css) vivem agora nesta camada, não na
+     secção: o ponteiro é seguido globalmente para o efeito atravessar a
+     fronteira entre secções. */
+  transition:
+    opacity 300ms ease,
+    --mx 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    --my 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: pentagonShimmer 16s ease-in-out infinite;
+}
+
+/* Brilho muito suave (opacidade + matiz) para sinalizar que a textura não é
+   estática, sem chamar atenção sobre o conteúdo. */
+@keyframes pentagonShimmer {
+  0%,
+  100% {
+    opacity: 0.16;
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  50% {
+    opacity: 0.3;
+    filter: hue-rotate(14deg) brightness(1.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .texture {
+    animation: none;
+  }
+}

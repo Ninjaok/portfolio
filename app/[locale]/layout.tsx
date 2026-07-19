@@ -1,5 +1,5 @@
 import "../globals.css";
-import { Space_Grotesk } from "next/font/google";
+import { Playfair_Display, Inter } from "next/font/google";
 import Script from "next/script";
 import Sidebar from "@/components/Sidebar";
 import ScrollProgress from "@/components/ScrollProgress";
@@ -9,10 +9,18 @@ import { LOCALES, localeToLang, type LocaleCode } from "@/lib/translations";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-const spaceGrotesk = Space_Grotesk({
+// Identidade do modelo (modelo/README.md): Playfair Display 700 nos títulos.
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-display",
+});
+
+// Used by the Sidebar component for its body copy.
+const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-display",
+  variable: "--font-inter",
 });
 
 const locales = LOCALES.map((l) => l.code);
@@ -80,7 +88,11 @@ export default async function LocaleLayout({
   const lang = localeToLang(locale);
 
   return (
-    <html lang={locale} className={spaceGrotesk.variable} suppressHydrationWarning>
+    <html
+      lang={locale}
+      className={`${playfair.variable} ${inter.variable}`}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning>
       <head>
         {/* Anti-FOUC: apply theme class before React hydrates. next/script with
             beforeInteractive is required here — a raw <script> tag gets

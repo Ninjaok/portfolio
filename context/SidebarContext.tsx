@@ -18,8 +18,14 @@ interface SidebarContextValue {
 
 const SidebarContext = createContext<SidebarContextValue | null>(null);
 
-export function SidebarProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<SidebarState>("compact");
+export function SidebarProvider({
+  children,
+  initialMode = "compact",
+}: {
+  children: ReactNode;
+  initialMode?: SidebarState;
+}) {
+  const [state, setState] = useState<SidebarState>(initialMode);
 
   return (
     <SidebarContext.Provider value={{ state, setState }}>

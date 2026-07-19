@@ -1,39 +1,45 @@
 .section {
-  --bg: var(--background);
-  --text: var(--text);
-  --subtext: var(--subtext);
-  --border: var(--border);
-  --accent: var(--accent);
-  --surface: var(--surface);
+  /* About Me é sempre escuro (INK), nos dois temas — ver modelo/TEMA.md.
+     Accent claro fixo (#a8b57a) porque o fundo aqui é sempre escuro. */
+  --bg: var(--ink, #2b2e1f);
+  --text: #f4f4ec;
+  --subtext: #c3c6a9;
+  --border: #43482f;
+  --accent: #a8b57a;
+  --surface: #343926;
 
+  position: relative;
   width: 100%;
+  min-height: 100vh;
   background: var(--bg);
-  padding: 120px 40px 60px;
+  /* Padding inferior 20% menor que o superior */
+  padding: 90px 6vw 72px;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  border-top: 1px solid var(--border);
+  align-items: center;
   transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
 }
 
 .container {
-  max-width: 1160px;
+  position: relative;
+  z-index: 1;
+  max-width: 1240px;
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: 80px;
-  align-items: start;
+  /* Foto mais estreita à esquerda para dar mais espaço ao texto */
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: 64px;
+  align-items: center;
 }
 
-/* Coluna Direita: Carrossel */
-.rightCol {
+/* Coluna Esquerda: foto/carrossel 4:5 (modelo) */
+.photoCol {
   display: flex;
   flex-direction: column;
-  gap: 36px;
-  width: 420px;
-  position: sticky;
-  top: 120px;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
 }
 
 .carouselContainer {
@@ -47,41 +53,60 @@
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 5;
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  box-shadow: 0 16px 40px -24px rgba(0, 0, 0, 0.15);
-  transition: border-color 300ms ease;
-}
-
-.imageFrame:hover {
-  border-color: var(--accent);
+  border: 1px solid #4a4f36;
+  background: #3a3e2b;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
 }
 
 .photo {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  /* cover: preenche todo o espaço do frame (a imagem inteira é vista ao
+     clicar, no lightbox, que usa contain). */
+  object-fit: cover;
   display: block;
+  transition: filter 300ms ease;
   /* Prevent native image drag from hijacking the swipe pointer sequence */
   -webkit-user-drag: none;
   user-select: none;
 }
 
+/* Hover: a imagem escurece 30%, reforçando a leitura da legenda */
+.imageFrame:hover .photo {
+  filter: brightness(0.7);
+}
+
+/* Legenda da imagem: só aparece no hover, sobre um degradê escuro */
 .photoCaption {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(18, 19, 21, 0.85) 0%, rgba(18, 19, 21, 0) 100%);
-  color: #FBF5DD;
-  padding: 40px 20px 32px;
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  background: linear-gradient(
+    to top,
+    rgba(6, 7, 4, 0.94) 0%,
+    rgba(6, 7, 4, 0.72) 38%,
+    rgba(6, 7, 4, 0.34) 70%,
+    rgba(6, 7, 4, 0.12) 100%
+  );
+  color: #f4f4ec;
+  padding: 20px;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  text-transform: none;
   text-align: left;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+  z-index: 5;
+}
+
+.imageFrame:hover .photoCaption {
+  opacity: 1;
 }
 
 .badgeCounter {
@@ -96,7 +121,6 @@
   padding: 4px 10px;
   border-radius: 999px;
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   z-index: 10;
 }
 
@@ -111,7 +135,6 @@
   background: rgba(0, 0, 0, 0.5);
   color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -187,35 +210,70 @@
   background-color: #fff;
 }
 
-/* Coluna Esquerda: Biografia */
+/* Coluna Direita: eyebrow + nome + biografia + áreas */
 .bioCol {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+}
+
+.eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 18px;
 }
 
 .heading {
-  margin: 0 0 32px;
+  margin: 0 0 24px;
   font-family: var(--font-display), Georgia, serif;
-  font-size: 52px;
-  font-weight: 600;
-  font-style: italic;
+  font-size: clamp(40px, 5vw, 60px);
+  font-weight: 700;
   letter-spacing: -0.01em;
-  line-height: 1.1;
+  line-height: 1;
   color: var(--text);
 }
 
 .bioParagraphs {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  margin-bottom: 48px;
+  gap: 18px;
+  margin-bottom: 40px;
+  cursor: pointer;
+}
+
+/* Véu na cor da secção atrás da biografia (mesma "física" da descrição em
+   ProjectSection): z-index -1 dentro do .container (z 1) fica entre o texto
+   e o padrão Penrose; a cor a ~88% só atenua, a box-shadow desvanece bordas. */
+.bioParagraphs::before {
+  content: "";
+  position: absolute;
+  inset: -14px -16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  border-radius: 14px;
+  box-shadow: 0 0 34px 22px color-mix(in srgb, var(--bg) 88%, transparent);
+  opacity: 0;
+  transition: opacity 800ms ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.bioParagraphsDimmed::before {
+  opacity: 1;
 }
 
 .bioText {
   font-size: 17px;
-  line-height: 1.8;
+  line-height: 1.72;
   color: var(--subtext);
   margin: 0;
+  text-align: justify;
+  /* Hifenização automática evita "rios" de espaço em linhas justificadas */
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 
 .bioText strong {
@@ -223,41 +281,32 @@
   font-weight: 600;
 }
 
-/* Grid de Destaques */
-.focusGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  margin-bottom: 56px;
+/* Áreas 01/02/03 em lista com divisórias (modelo) */
+.areas {
+  display: flex;
+  flex-direction: column;
 }
 
-.focusCard {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+.area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
 }
 
-.focusCard:hover {
-  transform: translateY(-3px);
-  border-color: var(--accent);
-  box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.12);
+.areaKicker {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
-.focusTitle {
-  margin: 0 0 10px;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 16.5px;
-  font-weight: 600;
+.areaBody {
+  font-size: 16px;
+  line-height: 1.5;
   color: var(--text);
-}
-
-.focusDesc {
-  margin: 0;
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: var(--subtext);
 }
 
 /* ---------- Responsivo ---------- */
@@ -268,30 +317,24 @@
     gap: 48px;
   }
 
-  .rightCol {
+  .photoCol {
     max-width: 420px;
     margin: 0 auto;
     width: 100%;
-    position: static;
   }
 }
 
 @container (max-width: 640px) {
   .section {
     padding: 80px 24px;
+    min-height: auto;
   }
 
   .heading {
     font-size: 38px;
-    margin-bottom: 24px;
   }
 
   .bioText {
     font-size: 15.5px;
-  }
-
-  .focusGrid {
-    grid-template-columns: 1fr;
-    gap: 16px;
   }
 }

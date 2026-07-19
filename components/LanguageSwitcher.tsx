@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import Link from "next/link";
 import { LOCALES } from "@/lib/translations";
 import sidebarStyles from "./Sidebar.module.css";
 import styles from "./LanguageSwitcher.module.css";
@@ -68,7 +67,7 @@ export default function LanguageSwitcher({ currentLocale }: { currentLocale: str
         aria-haspopup="menu"
         aria-expanded={isOpen}
         className={sidebarStyles.themeBtn}
-        style={{ fontWeight: "700", fontSize: "1.2rem", lineHeight: "1" }}
+        style={{ fontWeight: "700", fontSize: "0.8em", lineHeight: "1" }}
       >
         {currentLabel}
       </button>
@@ -83,8 +82,12 @@ export default function LanguageSwitcher({ currentLocale }: { currentLocale: str
             role="menu"
             style={{ top: position.top, left: position.left }}
           >
+            {/* <a> em vez de next/link: a troca de idioma faz um load completo.
+                Navegação client-side re-renderizaria o layout [locale] e os
+                scripts do <head> (anti-FOUC/JSON-LD), fazendo o React avisar
+                "Encountered a script tag while rendering React component". */}
             {LOCALES.map((l) => (
-              <Link
+              <a
                 key={l.code}
                 href={`/${l.code}`}
                 role="menuitem"
@@ -93,7 +96,7 @@ export default function LanguageSwitcher({ currentLocale }: { currentLocale: str
               >
                 <span className={styles.menuItemCode}>{l.label}</span>
                 <span className={styles.menuItemName}>{l.name}</span>
-              </Link>
+              </a>
             ))}
           </div>,
           document.body,

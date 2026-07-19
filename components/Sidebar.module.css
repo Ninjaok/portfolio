@@ -1,9 +1,21 @@
 .sidebar {
-  --bg: var(--background);
-  --text: var(--text);
-  --subtext: var(--subtext);
-  --border: var(--border);
-  --accent: var(--accent);
+  /* Paleta própria da Sidebar (oliva fixa, independente do tema da página),
+     injetada via inline style (--sb-*). Fallbacks literais — nunca
+     var(--mesmo-nome), que criaria um ciclo de custom property e
+     invalidaria a variável (Safari segue a spec à risca). */
+  --bg: var(--sb-bg, #2b2e1f);
+  --text: var(--sb-name, #f2f0e4);
+  --subtext: var(--sb-subtext, #c3c6a9);
+  --border: var(--sb-border, #454a30);
+  --accent: var(--sb-accent, #a8b57a);
+  --icon: var(--sb-icon, #e4e6d3);
+
+  /* Avatar/QR fluido: escala com a altura do ecrã (svh é estável face à
+     barra de URL móvel) para caber sem scroll de Nest Hub (600px) a
+     Zenbook Fold (1280px). Fallback fixo antes do clamp para browsers
+     sem unidades svh. */
+  --sb-avatar: 220px;
+  --sb-avatar: clamp(120px, 26svh, 220px);
 
   position: sticky;
   top: 0;
@@ -12,30 +24,44 @@
   flex-direction: column;
   align-items: center;
   height: 100dvh;
-  border-right: 1px solid var(--border);
-  background: var(--surface);
+  /* Vidro fosco: tinta oliva translúcida (--sb-bg com alpha, ver Sidebar.tsx)
+     sobre um blur do que estiver por trás. A opacidade ~0.78 mantém o
+     contraste do texto claro nos dois temas. */
+  background: var(--bg);
+  backdrop-filter: blur(18px);
   color: var(--text);
-  transition: width 400ms cubic-bezier(0.16, 1, 0.3, 1), height 400ms cubic-bezier(0.16, 1, 0.3, 1), background-color 300ms ease, border-color 300ms ease;
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
+  /* Sombra a separar os planos sidebar/conteúdo (modelo/TEMA.md) */
+  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.28);
+  /* Curva "out" acelerada: arranque rápido, assentamento suave — a animação
+     lê-se como pronta mais cedo do que o `ease` simétrico. */
+  transition:
+    width 240ms cubic-bezier(0.2, 0, 0, 1),
+    height 240ms cubic-bezier(0.2, 0, 0, 1),
+    background-color 300ms ease,
+    border-color 300ms ease;
   overflow: hidden;
   flex-shrink: 0;
 }
 
 .compact {
-  width: 100px;
+  /* Modelo: 64px; +10% a pedido do usuário */
+  width: 70px;
+  /* Base para o dimensionamento dinâmico (ícones/nome) desta secção. */
+  --sb-compact-size: 70px;
 }
 
 .expanded {
-  width: 480px;
-}
-
-.about {
-  width: 580px;
+  /* Fluida: 390px em desktops largos, encolhe em ecrãs tipo Nest Hub
+     (1024px) para não engolir o conteúdo. */
+  width: 390px;
+  width: clamp(300px, 32vw, 390px);
 }
 
 .collapseBtn {
   position: absolute;
-  top: 16px;
-  right: 12px;
+  top: 14px;
+  right: 14px;
   width: 28px;
   height: 28px;
   background: none;
@@ -50,7 +76,13 @@
   z-index: 2;
   transition:
     color 150ms ease,
-    background-color 150ms ease;
+    background-color 150ms ease,
+    transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* No estado compacto o botão aponta para a direita, sinalizando "expandir". */
+.collapseBtnExpand {
+  transform: rotate(180deg);
 }
 
 .collapseBtn:hover {
@@ -67,18 +99,32 @@
   justify-content: flex-start;
   height: 100%;
   width: 100%;
-  padding: 96px 0 40px;
+  padding: 72px 0 32px;
   box-sizing: border-box;
   cursor: pointer;
 }
 
+/* Ocupa o espaço vertical entre o topo e os ícones, centrando o nome nele
+   (em vez de ficar apenas ancorado no topo). */
+.nameWrap {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
 .verticalName {
   white-space: nowrap;
+  /* Mesma fonte de título do resto do site (.name na sidebar expandida,
+     headings das secções) em vez da cursiva, para padronizar. */
   font-family: var(--font-display), Georgia, serif;
-  font-size: 40px;
-  font-weight: 600;
-  font-style: italic;
-  letter-spacing: 0.5px;
+  /* Ratio menor que o da cursiva: a Playfair é bastante mais larga, então o
+     mesmo valor transbordaria a largura da sidebar compacta. */
+  font-size: calc(var(--sb-compact-size, 70px) * 0.42);
+  font-weight: 700;
+  letter-spacing: 0.02em;
   line-height: 1.2;
   color: var(--text);
   writing-mode: vertical-rl;
@@ -90,12 +136,14 @@
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  gap: 40px;
+  gap: 26px;
   margin-top: auto;
-  font-size: 32px;
+  /* Dinâmico: 40% do tamanho da sidebar compacta (50% menos 20%, a pedido
+     do usuário), responde a cada breakpoint através de --sb-compact-size. */
+  font-size: calc(var(--sb-compact-size, 70px) * 0.4);
 }
 
-/* ---------- Expandido: wrapper com conteúdo em cima e ícones fixos embaixo ---------- */
+/* ---------- Expandido / About: wrapper com conteúdo em cima e ícones fixos embaixo ---------- */
 
 @keyframes fadeIn {
   from {
@@ -120,30 +168,50 @@
   flex: 1;
   min-height: 0;
   width: 100%;
-  max-width: 400px;
+  max-width: 280px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* "safe center": centra quando cabe, mas alinha ao topo (em vez de cortar
+     por cima, ex.: avatar decapitado no Nest Hub) quando não cabe. */
   justify-content: center;
-  gap: 24px;
-  padding: 40px 24px;
+  justify-content: safe center;
+  gap: 20px;
+  gap: clamp(10px, 2.2svh, 20px);
+  padding: 56px 24px 20px;
+  padding: clamp(40px, 6svh, 56px) 24px 20px;
   box-sizing: border-box;
   text-align: center;
+  overflow-y: auto;
 }
 
-/* Botão "Sobre mim", logo abaixo do texto */
-.moreBtn {
+/* Mini índice: Projetos + Sobre mim lado a lado, Partilhar por baixo.
+   Em alturas curtas os três alinham numa só linha (ver media queries). */
+.miniIndex {
   display: flex;
-  align-items: center;
-  margin-top: 8px;
-  padding: 10px 24px;
-  font-size: 15px;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.miniIndexRow {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.miniIndexItem {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 13px;
   font-weight: 500;
-  color: var(--subtext);
+  color: var(--text);
   background: none;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 6px;
   cursor: pointer;
   transition:
     color 150ms ease,
@@ -151,36 +219,10 @@
     background-color 150ms ease;
 }
 
-.moreBtn:hover {
+.miniIndexItem:hover {
   color: var(--accent);
   border-color: var(--accent);
   background-color: color-mix(in srgb, var(--accent) 8%, transparent);
-}
-
-/* ---------- About me ---------- */
-
-.aboutWrapper {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  animation: fadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.aboutContent {
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  padding: 40px 24px;
-  box-sizing: border-box;
-  text-align: center;
 }
 
 /* ---------- Avatar (decorativo, sem clique) ---------- */
@@ -193,31 +235,41 @@
   flex-shrink: 0;
 }
 
-.avatarMd,
-.avatarLg {
+.avatarMd {
   position: relative;
   border-radius: 999px;
   overflow: hidden;
-  border: 2px solid var(--accent);
   box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.4);
+  width: var(--sb-avatar);
+  height: var(--sb-avatar);
+  flex-shrink: 0;
 }
 
-.avatarMd {
-  width: 240px;
-  height: 240px;
+/* ---------- Cartão QR ("Partilhar"): ocupa o lugar do avatar ---------- */
+
+/* Fundo bege do tema claro (#f4f4ec, --background em globals.css) com os
+   módulos no verde-escuro do sidebar — contraste alto, fácil de ler por
+   câmara. Literal porque a sidebar tem paleta própria, sem esse token. */
+.qrCard {
+  width: var(--sb-avatar);
+  height: var(--sb-avatar);
+  box-sizing: border-box;
+  background: #f4f4ec;
+  border-radius: 18px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
 }
 
-.avatarLg {
-  width: 320px;
-  height: 320px;
-}
-
-.avatarMd img,
-.avatarLg img {
+.qrCard svg {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
+  /* Literal sólido: var(--bg) agora é translúcido (vidro fosco) e módulos
+     semi-transparentes estragariam a leitura do QR. */
+  color: #2b2e1f;
 }
 
 .infoBlock {
@@ -227,37 +279,24 @@
   width: 100%;
 }
 
-.name,
-.nameLg {
+.name {
   margin: 0;
   font-family: var(--font-display), Georgia, serif;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.01em;
   color: var(--text);
-}
-
-.name {
-  font-size: 30px;
-}
-
-.nameLg {
-  font-size: 30px;
+  font-size: 26px;
+  font-size: clamp(22px, 3svh, 30px);
 }
 
 .bio {
-  margin: 16px 0 0;
-  font-size: 18px;
-  line-height: 1.7;
+  margin: 14px 0 0;
+  margin-top: clamp(8px, 1.4svh, 14px);
+  font-size: 15px;
+  font-size: clamp(13px, 1.9svh, 16px);
+  line-height: 1.5;
   color: var(--subtext);
-  max-width: 360px;
-}
-
-.bioLg {
-  margin: 16px 0 0;
-  font-size: 18px;
-  line-height: 1.7;
-  color: var(--subtext);
-  max-width: 360px;
+  max-width: 230px;
 }
 
 /* ---------- Linha de ícones (fixa, fora da área de scroll) ---------- */
@@ -267,19 +306,19 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  gap: 48px;
-  padding: 32px 24px 64px;
+  gap: 24px;
+  padding: 22px 16px 28px;
   border-top: 1px solid var(--border);
-  font-size: 32px;
+  font-size: 28px;
   flex-shrink: 0;
   box-sizing: border-box;
 }
 
-/* ---------- Toggle de tema ---------- */
+/* ---------- Toggle de tema da página (sol/lua) ---------- */
 
 .themeBtn {
   position: relative;
-  color: var(--subtext);
+  color: var(--icon);
   background: none;
   border: none;
   cursor: pointer;
@@ -314,7 +353,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
+  gap: 28px;
 }
 
 .mobileMenuBtn {
@@ -326,37 +365,39 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  max-width: 280px;
-  margin: 24px auto;
   text-align: center;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 16px 0;
 }
 
 .detailItem {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  font-size: 14.5px;
-  color: var(--subtext);
+  gap: 8px;
+  font-size: 14px;
+  color: var(--sb-info, #d5d8bd);
 }
 
 .detailItem svg {
-  font-size: 18px;
+  font-size: 16px;
   color: var(--accent);
   flex-shrink: 0;
 }
 
 @media (max-width: 860px) {
   .sidebar {
+    /* Topbar fluida: 64px em telemóveis, cresce em ecrãs móveis altos
+       (ex.: Zenbook Fold a 1280px) para os elementos não ficarem miúdos. */
+    --sb-topbar: 64px;
+    --sb-topbar: clamp(64px, 6svh, 84px);
+    /* Avatar/QR do menu fullscreen: escala com a altura real do ecrã. */
+    --sb-avatar: clamp(110px, 24svh, 260px);
+
     position: sticky;
     top: 0;
     width: 100% !important;
-    height: 64px;
+    height: var(--sb-topbar);
     min-height: auto;
     border-right: none;
     border-bottom: 1px solid var(--border);
@@ -367,11 +408,17 @@
 
   .compact {
     width: 100% !important;
-    height: 64px !important;
+    height: var(--sb-topbar) !important;
+    --sb-compact-size: var(--sb-topbar);
   }
 
-  .expanded,
-  .about {
+  /* No topbar mobile compacto o hambúrguer já cobre "expandir"; o chevron
+     absoluto ficaria sobreposto a ele e bloquearia o clique. */
+  .compact .collapseBtn {
+    display: none;
+  }
+
+  .expanded {
     position: fixed;
     top: 0;
     left: 0;
@@ -390,21 +437,27 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    height: 64px;
+    height: var(--sb-topbar);
+  }
+
+  .nameWrap {
+    /* Sai do fluxo flex: no topbar horizontal o nome fica à esquerda,
+       como antes, em vez de crescer/centrar como na coluna desktop. */
+    display: contents;
   }
 
   .verticalName {
     writing-mode: horizontal-tb;
     transform: none;
-    font-size: 22px;
-    font-style: italic;
+    /* Dinâmico: proporcional a --sb-compact-size (26px para 64px, igual ao
+       valor fixo anterior). */
+    font-size: calc(var(--sb-compact-size, 64px) * 0.41);
   }
 
   .iconStack {
     flex-direction: row;
     gap: 20px;
     margin-top: 0;
-    font-size: 24px;
   }
 
   .desktopOnly {
@@ -418,7 +471,6 @@
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 28px;
     color: var(--text);
     padding: 8px;
     min-width: 44px;
@@ -430,22 +482,49 @@
     transform: scale(1.1);
   }
 
-  /* Expanded / About Mode on Mobile */
+  /* Expanded / About Mode on Mobile: o conteúdo é dimensionado (clamps svh)
+     para caber sem scroll de um iPhone SE a um Zenbook Fold. O overflow-y
+     do .expandedContent fica só como rede de segurança (ex.: telemóvel em
+     paisagem); com o conteúdo a caber, não aparece scroll nenhum. */
   .expandedWrapper {
     height: 100%;
-    overflow-y: auto;
+    overflow: hidden;
+    overscroll-behavior: contain;
     justify-content: space-between;
   }
 
   .expandedContent {
     justify-content: center;
+    justify-content: safe center;
     padding: 80px 24px 40px;
+    padding: clamp(56px, 8svh, 96px) 24px clamp(14px, 2.5svh, 40px);
+    overflow-y: auto;
   }
 
-  .aboutContent {
-    justify-content: center;
-    padding: 80px 24px 40px;
-    overflow-y: auto;
+  .iconRowBottom {
+    padding: 22px 16px 28px;
+    padding: clamp(12px, 2.4svh, 22px) 16px clamp(14px, 3svh, 28px);
+  }
+
+  /* Telemóveis baixos (iPhone SE em pé, qualquer telemóvel em paisagem):
+     mesmo tratamento do Nest Hub — sem localização/email, botões em linha. */
+  @media (max-height: 700px) {
+    .sidebarDetails {
+      display: none;
+    }
+
+    .miniIndex {
+      flex-direction: row;
+    }
+
+    .miniIndexRow {
+      display: contents;
+    }
+
+    .miniIndexItem {
+      padding: 9px 8px;
+      font-size: 12.5px;
+    }
   }
 
   .collapseBtn {
@@ -457,3 +536,31 @@
   }
 }
 
+/* Desktop de altura curta (ex.: Nest Hub, 1024x600): sem espaço vertical
+   para tudo — cai a localização/email, os três botões partilham uma linha
+   e os espaçamentos encolhem, para o avatar nunca ficar cortado.
+   NOTA: este bloco vive no fim do ficheiro de propósito — precisa de vir
+   DEPOIS das regras base (.sidebarDetails etc.) para as vencer em cascata. */
+@media (min-width: 861px) and (max-height: 680px) {
+  .sidebarDetails {
+    display: none;
+  }
+
+  .miniIndex {
+    flex-direction: row;
+  }
+
+  .miniIndexRow {
+    display: contents;
+  }
+
+  .miniIndexItem {
+    padding: 9px 8px;
+    font-size: 12.5px;
+  }
+
+  .iconRowBottom {
+    padding: 12px 16px 14px;
+    font-size: 24px;
+  }
+}

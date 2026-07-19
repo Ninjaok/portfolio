@@ -1,5 +1,5 @@
 .iconLink {
-  color: var(--subtext);
+  color: var(--icon, var(--subtext));
   background: none;
   border: none;
   cursor: pointer;
