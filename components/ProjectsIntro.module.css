@@ -141,7 +141,20 @@
   font-family: var(--font-display), Georgia, serif;
   font-size: 15px;
   font-weight: 600;
-  opacity: 0.55;
+  /* Antes: opacity 0.55 sobre --text, o que caía para ~3:1 contra
+     --surface (falha o WCAG AA de 4.5:1 para texto normal, apontado pelo
+     PageSpeed). --subtext já é uma cor sólida desenhada para ter contraste
+     AA nos dois temas (é a mesma usada no corpo da descrição). */
+  color: var(--subtext);
+}
+
+.card:hover .num,
+.cardActive .num {
+  /* Dentro do card ativo/hover o fundo passa a --cta-bg (ver .cardActive) e
+     a cor do texto para --cta-fg; sem isto a cor fixa acima ficava ilegível
+     sobre esse fundo escuro/claro. */
+  color: inherit;
+  opacity: 0.75;
 }
 
 .cardTitle {

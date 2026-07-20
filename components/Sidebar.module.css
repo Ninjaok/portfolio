@@ -58,10 +58,54 @@
   width: clamp(300px, 32vw, 390px);
 }
 
+/* Logo do estado expandido/about. Fica numa FAIXA própria acima da foto, e
+   centra-se nela (vertical e horizontalmente) em vez de ficar colado ao topo
+   do conteúdo. A faixa tem altura própria (escala com o ecrã) em vez de
+   flex: 1: com flex: 1 o logo absorveria toda a folga da coluna e empurraria
+   o avatar e o resto para baixo em ecrãs altos. */
+.logoSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-shrink: 0;
+  /* A faixa dá o "centrado acima da foto", mas é espaço vazio e entra no
+     mesmo orçamento vertical de todos os clamps svh desta coluna. A 13svh
+     (o valor inicial) a soma passava dos 100svh entre ~700 e ~780px de
+     altura e a coluna ganhava scroll — apanhava portáteis de 1366×768.
+     7svh mantém o efeito com folga em qualquer janela. */
+  height: 64px;
+  height: clamp(44px, 7svh, 88px);
+}
+
+/* 55px = a medida anterior de 46px +20%. Quadrado: o viewBox do SunLogo é
+   200×200. */
+.logoMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 55px;
+  height: 55px;
+  width: clamp(43px, 5.5svh, 55px);
+  height: clamp(43px, 5.5svh, 55px);
+  /* Cor real do tema da PÁGINA (claro #6b7a3f / escuro #a8b57a), não a
+     paleta oliva fixa da sidebar: --accent aqui dentro resolve para
+     --sb-accent, igual nos dois temas. --color-accent não é redefinida
+     nesta folha, por isso herda o valor de :root (ver app/globals.css). */
+  color: var(--color-accent);
+}
+
+.logoMark svg {
+  width: 100%;
+  height: 100%;
+}
+
 .collapseBtn {
   position: absolute;
   top: 14px;
   right: 14px;
+  z-index: 2;
   width: 28px;
   height: 28px;
   background: none;
@@ -73,16 +117,10 @@
   justify-content: center;
   border-radius: 999px;
   font-size: 15px;
-  z-index: 2;
+  flex-shrink: 0;
   transition:
     color 150ms ease,
-    background-color 150ms ease,
-    transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* No estado compacto o botão aponta para a direita, sinalizando "expandir". */
-.collapseBtnExpand {
-  transform: rotate(180deg);
+    background-color 150ms ease;
 }
 
 .collapseBtn:hover {
@@ -99,36 +137,56 @@
   justify-content: flex-start;
   height: 100%;
   width: 100%;
-  padding: 72px 0 32px;
+  /* 16px no topo (era 72px): já não é preciso reservar espaço para o chevron
+     absoluto — no compacto ele não é renderizado e o logo ocupa esse lugar. */
+  padding: 16px 0 32px;
   box-sizing: border-box;
   cursor: pointer;
 }
 
-/* Ocupa o espaço vertical entre o topo e os ícones, centrando o nome nele
-   (em vez de ficar apenas ancorado no topo). */
-.nameWrap {
+/* Logo do estado compacto — aqui ele É o botão de expandir (o chevron não é
+   renderizado neste estado, ver Sidebar.tsx). Serve a coluna estreita do
+   desktop e o topbar do telemóvel, que partilham a mesma marcação. Sem nome
+   de texto em nenhum dos dois: não há largura/altura para ele ser legível.
+   O ::before dá um alvo de toque de 44px sem inflar o desenho. */
+.logoBtn {
   display: flex;
-  flex: 1;
-  min-height: 0;
-  width: 100%;
   align-items: center;
   justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  /* Cor real do tema da PÁGINA (claro #6b7a3f / escuro #a8b57a), não a
+     paleta oliva fixa da sidebar (--accent aqui dentro resolve para
+     --sb-accent, igual nos dois temas). --color-accent não é redefinida
+     nesta folha, por isso herda o valor de :root (ver app/globals.css). */
+  color: var(--color-accent);
+  /* Quadrado (viewBox 200×200 do SunLogo). 0.483 = o 0.42 original +15%. */
+  width: calc(var(--sb-compact-size, 70px) * 0.483);
+  height: calc(var(--sb-compact-size, 70px) * 0.483);
+  transition: transform 150ms ease, opacity 150ms ease;
 }
 
-.verticalName {
-  white-space: nowrap;
-  /* Mesma fonte de título do resto do site (.name na sidebar expandida,
-     headings das secções) em vez da cursiva, para padronizar. */
-  font-family: var(--font-display), Georgia, serif;
-  /* Ratio menor que o da cursiva: a Playfair é bastante mais larga, então o
-     mesmo valor transbordaria a largura da sidebar compacta. */
-  font-size: calc(var(--sb-compact-size, 70px) * 0.42);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  line-height: 1.2;
-  color: var(--text);
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
+.logoBtn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
+.logoBtn:hover {
+  transform: scale(1.08);
+}
+
+.logoBtn svg {
+  width: 100%;
+  height: 100%;
 }
 
 .iconStack {
@@ -391,8 +449,10 @@
        (ex.: Zenbook Fold a 1280px) para os elementos não ficarem miúdos. */
     --sb-topbar: 64px;
     --sb-topbar: clamp(64px, 6svh, 84px);
-    /* Avatar/QR do menu fullscreen: escala com a altura real do ecrã. */
-    --sb-avatar: clamp(110px, 24svh, 260px);
+    /* Avatar/QR do menu fullscreen: escala com a altura real do ecrã. O teto
+       desceu de 260px/24svh — a soma dos clamps svh da coluna passava dos
+       100svh em ecrãs médios e obrigava a coluna a rolar. */
+    --sb-avatar: clamp(104px, 19svh, 200px);
 
     position: sticky;
     top: 0;
@@ -410,12 +470,6 @@
     width: 100% !important;
     height: var(--sb-topbar) !important;
     --sb-compact-size: var(--sb-topbar);
-  }
-
-  /* No topbar mobile compacto o hambúrguer já cobre "expandir"; o chevron
-     absoluto ficaria sobreposto a ele e bloquearia o clique. */
-  .compact .collapseBtn {
-    display: none;
   }
 
   .expanded {
@@ -438,20 +492,6 @@
     justify-content: space-between;
     padding: 0 20px;
     height: var(--sb-topbar);
-  }
-
-  .nameWrap {
-    /* Sai do fluxo flex: no topbar horizontal o nome fica à esquerda,
-       como antes, em vez de crescer/centrar como na coluna desktop. */
-    display: contents;
-  }
-
-  .verticalName {
-    writing-mode: horizontal-tb;
-    transform: none;
-    /* Dinâmico: proporcional a --sb-compact-size (26px para 64px, igual ao
-       valor fixo anterior). */
-    font-size: calc(var(--sb-compact-size, 64px) * 0.41);
   }
 
   .iconStack {
@@ -493,11 +533,22 @@
     justify-content: space-between;
   }
 
+  /* Sem faixa à volta do logo no menu fullscreen: no desktop ela centra o
+     logo no espaço acima da foto, mas aqui reservava 64–128px de vazio à
+     volta de um desenho de ~50px — espaço que o menu não tem. A folga passa
+     a ser só o `gap` da coluna. Era o maior item do orçamento vertical. */
+  .logoSlot {
+    height: auto;
+  }
+
   .expandedContent {
     justify-content: center;
     justify-content: safe center;
-    padding: 80px 24px 40px;
-    padding: clamp(56px, 8svh, 96px) 24px clamp(14px, 2.5svh, 40px);
+    /* Topo bem menor (era clamp(56px, 8svh, 96px)): esse valor existia para
+       o conteúdo passar por baixo do chevron, mas o chevron está encostado à
+       direita e o logo é centrado — não se cruzam. */
+    padding: 28px 24px 16px;
+    padding: clamp(20px, 3.5svh, 36px) 24px clamp(12px, 2svh, 24px);
     overflow-y: auto;
   }
 

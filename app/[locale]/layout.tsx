@@ -30,6 +30,11 @@ const DESCRIPTIONS: Record<LocaleCode, string> = {
   en: "Luan Ribeiro's portfolio — Software Engineer, Data Science & AI. Projects in Python, Java, C++, ROS 2 and Next.js.",
   fr: "Portfolio de Luan Ribeiro — Ingénieur Logiciel, Data Science & IA. Projets en Python, Java, C++, ROS 2 et Next.js.",
   de: "Portfolio von Luan Ribeiro — Software-Ingenieur, Data Science & KI. Projekte in Python, Java, C++, ROS 2 und Next.js.",
+  es: "Portfolio de Luan Ribeiro — Ingeniero de Software, Data Science e IA. Proyectos en Python, Java, C++, ROS 2 y Next.js.",
+  it: "Portfolio di Luan Ribeiro — Ingegnere del Software, Data Science e IA. Progetti in Python, Java, C++, ROS 2 e Next.js.",
+  ru: "Портфолио Луана Рибейру — инженер-программист, Data Science и ИИ. Проекты на Python, Java, C++, ROS 2 и Next.js.",
+  tr: "Luan Ribeiro'nun portfolyosu — Yazılım Mühendisi, Veri Bilimi ve Yapay Zekâ. Python, Java, C++, ROS 2 ve Next.js projeleri.",
+  uk: "Портфоліо Луана Рібейру — інженер-програміст, Data Science та ШІ. Проєкти на Python, Java, C++, ROS 2 і Next.js.",
 };
 
 const OG_LOCALES: Record<LocaleCode, string> = {
@@ -37,6 +42,11 @@ const OG_LOCALES: Record<LocaleCode, string> = {
   en: "en_US",
   fr: "fr_FR",
   de: "de_DE",
+  es: "es_ES",
+  it: "it_IT",
+  ru: "ru_RU",
+  tr: "tr_TR",
+  uk: "uk_UA",
 };
 
 export function generateStaticParams() {

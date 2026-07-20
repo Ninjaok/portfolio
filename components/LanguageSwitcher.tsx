@@ -17,13 +17,20 @@ export default function LanguageSwitcher({ currentLocale }: { currentLocale: str
     const rect = btnRef.current?.getBoundingClientRect();
     if (!rect) return;
     const estimatedWidth = 180;
-    const estimatedHeight = LOCALES.length * 40 + 12;
+    // Espelha o `max-height` do .menu: sem o teto, com 9 idiomas a estimativa
+    // (~372px) ultrapassa viewports baixas e as duas tentativas de
+    // posicionamento falhavam, encostando o menu ao topo na mesma.
+    const estimatedHeight = Math.min(
+      LOCALES.length * 40 + 12,
+      Math.min(320, window.innerHeight - 24),
+    );
     let left = rect.left;
     let top = rect.bottom + 8;
     if (left + estimatedWidth > window.innerWidth - 8) {
       left = Math.max(8, rect.right - estimatedWidth);
     }
     if (top + estimatedHeight > window.innerHeight - 8) {
+      // Acima do botão; se também não couber, encosta ao topo (o menu rola).
       top = Math.max(8, rect.top - estimatedHeight - 8);
     }
     setPosition({ top, left });

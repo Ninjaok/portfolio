@@ -49,7 +49,7 @@ function layoutBox(node: HTMLElement) {
    da sidebar). Só um resize da JANELA regenera. */
 export default function PentagonTexture() {
   const ref = useRef<SVGSVGElement>(null);
-  const [geom, setGeom] = useState<{ d: string; w: number } | null>(null);
+  const [geom, setGeom] = useState<{ d: string } | null>(null);
   // Canto DA CAMADA (não da secção) em coordenadas de página, para converter
   // o ponteiro sem chamar getBoundingClientRect a cada mousemove.
   const pagePos = useRef({ left: 0, top: 0 });
@@ -77,7 +77,6 @@ export default function PentagonTexture() {
         const right = box.left + box.width; // = borda direita do viewport
         pagePos.current = { left: right - w, top: box.top };
         setGeom({
-          w,
           d: penrosePath(
             {
               left: Math.round(right - w),
@@ -169,12 +168,15 @@ export default function PentagonTexture() {
 
   return (
     /* Sem viewBox: as coordenadas do path são píxeis CSS 1:1 do elemento.
-       Largura fixa + ancoragem à direita (CSS): o elemento não se move em
-       coordenadas de ecrã quando a sidebar muda a largura da secção. */
+       Largura fixa (100vw + folga, definida no CSS, não via JS) + ancoragem
+       à direita: a caixa já tem o tamanho final no primeiro paint (SSR),
+       nunca muda de tamanho depois de montar — corrige o CLS que a troca
+       para uma largura calculada em JS (post-hydration) provocava, já que
+       este elemento decorativo (position:absolute) ainda conta para a
+       Layout Instability API mesmo sem empurrar outro conteúdo. */
     <svg
       ref={ref}
       className={styles.texture}
-      style={geom ? { width: geom.w } : undefined}
       aria-hidden="true"
       focusable="false"
     >

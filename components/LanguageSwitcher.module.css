@@ -10,6 +10,13 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  /* Com 9 idiomas a lista passa dos ~370px e não cabe em viewports baixas
+     (telemóvel em paisagem, janelas curtas). Limita e deixa rolar dentro do
+     próprio menu — o cálculo de posição em LanguageSwitcher.tsx usa o mesmo
+     teto, para não tentar abrir uma caixa maior do que o que desenha. */
+  max-height: min(320px, calc(100dvh - 24px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
   animation: fadeIn 120ms ease;
 }
 

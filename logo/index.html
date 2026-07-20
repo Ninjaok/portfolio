@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-br"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sun logo — pacote 8f</title>
+<style>
+:root{--bg:#f4f4ec;--ink:#2b2e1f;--sub:#6b6f56;--acc:#6b7a3f;--surf:#fff;--bd:#e2e3d6}
+*{box-sizing:border-box}body{margin:0;font-family:ui-sans-serif,system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:900px;margin:0 auto;padding:56px 28px 80px}
+h1{font-size:26px;margin:0 0 4px;letter-spacing:-.02em}p.lead{color:var(--sub);margin:0 0 36px;font-size:15px}
+h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--sub);margin:40px 0 14px;border-top:1px solid var(--bd);padding-top:20px}
+.grid{display:flex;flex-wrap:wrap;gap:16px}
+.card{background:var(--surf);border:1px solid var(--bd);border-radius:14px;overflow:hidden;width:150px}
+.sw{aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.card .name{font-size:12px;padding:9px 11px;color:var(--sub);border-top:1px solid var(--bd)}
+.card .name b{color:var(--ink);font-weight:600;display:block;font-size:12.5px}
+pre{background:#23261a;color:#dfe3c0;padding:18px 20px;border-radius:12px;overflow:auto;font-size:12.5px;line-height:1.6}
+code{font-family:ui-monospace,monospace}
+.files{columns:2;font-size:13px;color:var(--sub);line-height:1.9}
+.files b{color:var(--ink);font-weight:600}
+</style></head>
+<body><div class="wrap">
+<h1>Sun logo · pacote 8f</h1>
+<p class="lead">Contorno sage inclinado 12°, na paleta do seu portfólio. Tudo em <b>/logo</b>. Prévias abaixo.</p>
+
+<h2>Logo — SVG (vetorial, escalável)</h2>
+<div class="grid">
+  <div class="card"><div class="sw" style="background:#1c1e13"><img src="sun-logo-dark.svg" width="88"></div><div class="name"><b>sun-logo-dark.svg</b>sage #a8b57a</div></div>
+  <div class="card"><div class="sw" style="background:#f4f4ec"><img src="sun-logo-light.svg" width="88"></div><div class="name"><b>sun-logo-light.svg</b>oliva #6b7a3f</div></div>
+  <div class="card"><div class="sw" style="background:#282b1b;color:#c9cfa8"><img src="sun-logo.svg" width="88"></div><div class="name"><b>sun-logo.svg</b>currentColor (herda a cor)</div></div>
+</div>
+
+<h2>Favicon / ícones</h2>
+<div class="grid">
+  <div class="card"><div class="sw" style="background:#1c1e13"><img src="favicon-48-dark.png" width="48"></div><div class="name"><b>favicon · dark</b>16 · 32 · 48</div></div>
+  <div class="card"><div class="sw" style="background:#f4f4ec"><img src="favicon-48-light.png" width="48"></div><div class="name"><b>favicon · light</b>16 · 32 · 48</div></div>
+  <div class="card"><div class="sw" style="background:#eceddf"><img src="apple-touch-icon.png" width="90" style="border-radius:20px"></div><div class="name"><b>apple-touch-icon</b>180 · cantos arredondados</div></div>
+  <div class="card"><div class="sw" style="background:#282b1b"><img src="sun-512-sage.png" width="90"></div><div class="name"><b>sun-512-sage.png</b>PNG transparente</div></div>
+</div>
+
+<h2>Como plugar no seu sistema</h2>
+<pre><code>&lt;!-- favicons (troque por prefers-color-scheme se quiser) --&gt;
+&lt;link rel="icon" type="image/svg+xml" href="/logo/sun-logo.svg"&gt;
+&lt;link rel="icon" type="image/png" sizes="32x32" href="/logo/favicon-32-dark.png"&gt;
+&lt;link rel="apple-touch-icon" href="/logo/apple-touch-icon.png"&gt;
+
+&lt;!-- logo no header: usa currentColor, então segue a cor do tema --&gt;
+&lt;a class="brand" href="/"&gt;
+  &lt;img src="/logo/sun-logo.svg" alt="logo" width="32" height="32"&gt;
+&lt;/a&gt;
+&lt;style&gt;
+  .brand img{ color: var(--accent); }  /* claro: #6b7a3f · escuro: #a8b57a */
+&lt;/style&gt;</code></pre>
+
+<h2>Arquivos no pacote</h2>
+<div class="files">
+<b>SVG:</b> sun-logo.svg · sun-logo-dark.svg · sun-logo-light.svg · favicon-dark.svg · favicon-light.svg<br>
+<b>PNG favicon:</b> favicon-16/32/48-dark.png · favicon-16/32/48-light.png · apple-touch-icon.png<br>
+<b>PNG grande:</b> sun-512-sage.png · sun-512-olive.png
+</div>
+</div></body></html>

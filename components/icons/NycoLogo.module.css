@@ -1,0 +1,24 @@
+.logo {
+  /* Ocupa a caixa que o pai definir. O viewBox é 40×54 (mais alto que
+     largo), por isso quem dimensiona controla a ALTURA e a largura vem do
+     rácio — ver .participantLogoNyco em ProjectSection.module.css. */
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Troca de variante pelo tema da PÁGINA. O ThemeContext põe .light/.dark no
+   <html>, daí o :global — a classe não é gerada por este módulo.
+   Base = claro; o escuro sobrepõe. Assim o SSR (sem classe ainda) mostra a
+   variante clara em vez de nenhuma. */
+.bodyDark {
+  display: none;
+}
+
+:global(html.dark) .bodyLight {
+  display: none;
+}
+
+:global(html.dark) .bodyDark {
+  display: block;
+}

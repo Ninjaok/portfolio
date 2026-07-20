@@ -7,6 +7,13 @@ import type { Lang } from "@/lib/translations";
 import { imageDescription } from "@/lib/imageDescriptions";
 import ImageLightbox from "./ImageLightbox";
 import PentagonTexture from "./PentagonTexture";
+import {
+  SunLogo,
+  NycoLogo,
+  GitHubIcon,
+  LinkedInIcon,
+  GlobeIcon,
+} from "./icons";
 
 type TechItem = { label: string };
 type Participant = {
@@ -147,6 +154,9 @@ export default function ProjectSection({
   }, [activeIndex, isVisible]);
 
   const currentSrc = images[activeIndex] ?? "";
+  // Só a imagem inicialmente visível do primeiro projeto: depois de o
+  // utilizador avançar o carrossel já não é a que pinta primeiro.
+  const isLcpCandidate = index === 0 && activeIndex === 0;
   const isVideo =
     currentSrc.endsWith(".mp4") || currentSrc.endsWith(".webm");
   const isGif = currentSrc.endsWith(".gif");
@@ -204,7 +214,15 @@ export default function ProjectSection({
                   fill
                   sizes="(max-width: 960px) 100vw, 50vw"
                   style={{ objectFit: "cover" }}
-                  loading="lazy"
+                  /* O primeiro slide do primeiro projeto é o candidato a LCP
+                     (a intro acima é só texto), por isso carrega com
+                     prioridade em vez de lazy — era o aviso "detected as the
+                     Largest Contentful Paint" do Next. Os restantes ficam
+                     lazy: são slides escondidos ou secções abaixo da dobra.
+                     priority e loading são mutuamente exclusivos. */
+                  {...(isLcpCandidate
+                    ? { priority: true }
+                    : { loading: "lazy" as const })}
                 />
               )}
               <div className={styles.badgeCounter}>
@@ -243,6 +261,7 @@ export default function ProjectSection({
                   target="_blank"
                   rel="noreferrer noopener"
                   className={styles.repoBtn}
+                  aria-label={`${visitGithubLabel}: ${title}`}
                 >
                   {visitGithubLabel}
                 </a>
@@ -311,6 +330,7 @@ export default function ProjectSection({
               target="_blank"
               rel="noreferrer noopener"
               className={styles.repoBtnSolo}
+              aria-label={`${visitGithubLabel}: ${title}`}
             >
               {visitGithubLabel}
             </a>
@@ -332,24 +352,24 @@ export default function ProjectSection({
 /* Ícone do link do participante conforme o destino (modelo: círculos 34px
    com globo/LinkedIn/GitHub) */
 function ParticipantLinkIcon({ href }: { href: string }) {
-  if (href.includes("github.com")) {
+  /* Sites com marca própria mostram o logo em vez do globo genérico. Quem
+     não tiver logo aqui cai no globo, que continua a ser a leitura certa
+     para "site pessoal" de terceiros. */
+  if (href.includes("ninja0k.com")) {
     return (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.03a9.6 9.6 0 0 1 5 0c1.91-1.3 2.75-1.03 2.75-1.03.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.85-2.35 4.7-4.58 4.94.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2z" />
-      </svg>
+      <span className={styles.participantLogo}>
+        <SunLogo />
+      </span>
     );
   }
-  if (href.includes("linkedin.com")) {
+  if (href.includes("nycocado.dev")) {
     return (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M6.94 8.5a1.94 1.94 0 1 0 0-3.88 1.94 1.94 0 0 0 0 3.88zM5.25 10.25h3.38V19H5.25v-8.75zM10.75 10.25h3.24v1.2h.05c.45-.85 1.55-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.18V19h-3.38v-4.6c0-1.1-.02-2.5-1.53-2.5-1.54 0-1.78 1.2-1.78 2.43V19h-3.35v-8.75z" />
-      </svg>
+      <span className={styles.participantLogoNyco}>
+        <NycoLogo />
+      </span>
     );
   }
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.7" />
-      <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" stroke="currentColor" strokeWidth="1.7" />
-    </svg>
-  );
+  if (href.includes("github.com")) return <GitHubIcon />;
+  if (href.includes("linkedin.com")) return <LinkedInIcon />;
+  return <GlobeIcon />;
 }

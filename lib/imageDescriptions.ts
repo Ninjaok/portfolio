@@ -2,8 +2,13 @@ import type { Lang } from "./translations";
 
 /* Legendas mostradas ao passar o rato sobre cada imagem dos carrosséis.
    A chave é o nome do ficheiro sem pasta nem extensão (ex.: "speedy_1"),
-   para a legenda acompanhar a imagem onde quer que ela seja usada. */
-const DESCRIPTIONS: Record<string, Record<Lang, string>> = {
+   para a legenda acompanhar a imagem onde quer que ela seja usada.
+
+   Partial (não Record completo) de propósito: acrescentar um idioma ao site
+   passaria a exigir 19 legendas novas só para o ficheiro compilar, o que
+   trava a adição de locales. Em vez disso, o que faltar cai para EN — ver
+   imageDescription() no fim do ficheiro. */
+const DESCRIPTIONS: Record<string, Partial<Record<Lang, string>>> = {
   // ---------- Speedy ----------
   speedy_1: {
     PT: "O Speedy registado em película 35 mm — fotografia analógica do veículo autónomo.",
@@ -233,8 +238,10 @@ function keyFromSrc(src: string): string {
   return file.replace(/\.[^.]+$/, "");
 }
 
-/** Legenda da imagem no idioma pedido, ou "" se não houver (o componente
-    esconde a legenda nesse caso). */
+/** Legenda da imagem no idioma pedido. Sem tradução nesse idioma, recorre ao
+    EN (idioma-ponte do site) antes de desistir; "" quando a imagem não tem
+    legenda nenhuma — o componente esconde a legenda nesse caso. */
 export function imageDescription(src: string, lang: Lang): string {
-  return DESCRIPTIONS[keyFromSrc(src)]?.[lang] ?? "";
+  const entry = DESCRIPTIONS[keyFromSrc(src)];
+  return entry?.[lang] ?? entry?.EN ?? "";
 }

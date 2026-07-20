@@ -349,6 +349,9 @@
   /* Fundo opaco na cor da secção: o padrão Penrose não transparece */
   background: var(--bg);
   color: var(--accent);
+  /* Os ícones desenham a 1em (ver components/icons): é este font-size que
+     lhes dá os 16px — antes era hardcoded em cada <svg>. */
+  font-size: 16px;
   flex-shrink: 0;
   text-decoration: none;
   transition: border-color 150ms ease, background-color 150ms ease;
@@ -357,6 +360,36 @@
 .participantIconBtn:hover {
   border-color: var(--accent);
   background: color-mix(in srgb, var(--accent) 10%, var(--bg));
+}
+
+/* Logo dentro do botão do participante (ninja0k.com). Um pouco maior que os
+   16px dos ícones vizinhos: o desenho é só contorno fino e à mesma medida
+   lia-se mais leve que o GitHub/LinkedIn, que são sólidos. */
+/* Logo do portfólio no botão do participante (ninja0k.com). Quadrado
+   (viewBox 200×200) e um pouco maior que os 16px dos ícones vizinhos: é só
+   contorno fino e à mesma medida lia-se mais leve que o GitHub/LinkedIn,
+   que são sólidos. Segue --accent como os outros ícones, via currentColor. */
+.participantLogo {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+/* Logo do Nycolas (nycocado.dev). Multicolor e com viewBox 40×54, mais alto
+   que largo: a ALTURA é que manda e a largura vem do rácio — numa caixa
+   quadrada o desenho limitava-se pela largura e ficava menor que os
+   vizinhos. Sem `color`: tem cores próprias, não herda currentColor. */
+.participantLogoNyco {
+  display: block;
+  height: 21px;
+  aspect-ratio: 40 / 54;
+  width: auto;
+}
+
+.participantLogo svg,
+.participantLogoNyco svg {
+  width: 100%;
+  height: 100%;
 }
 
 /* ---------- Responsivo ---------- */

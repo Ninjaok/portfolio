@@ -37,43 +37,57 @@ export default function ProjectsIntro({
   // o projeto visível no índice; a secção about (ou o fim do scroll) muda a
   // sidebar para o estado "about" e sair dela devolve "expanded".
   useEffect(() => {
+    // As leituras de layout (getBoundingClientRect) ficam presas a um único
+    // requestAnimationFrame por frame: o evento nativo "scroll" pode disparar
+    // muitas vezes entre dois frames pintados, e sem este throttle cada
+    // disparo lia o layout de per si — trabalho extra na thread principal
+    // (custava TBT no PageSpeed) sem nenhum ganho visual, já que só o valor
+    // do último frame chega a ser pintado.
+    let raf = 0;
     const onScroll = () => {
-      const line = window.scrollY + window.innerHeight * 0.4;
-      let act = -1;
-      let about = false;
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const line = window.scrollY + window.innerHeight * 0.4;
+        let act = -1;
+        let about = false;
 
-      items.forEach((item, i) => {
-        const el = document.getElementById(item.slug);
-        if (el && el.getBoundingClientRect().top + window.scrollY <= line) {
-          act = i;
+        items.forEach((item, i) => {
+          const el = document.getElementById(item.slug);
+          if (el && el.getBoundingClientRect().top + window.scrollY <= line) {
+            act = i;
+          }
+        });
+
+        const aboutEl = document.getElementById("about-me");
+        if (aboutEl && aboutEl.getBoundingClientRect().top + window.scrollY <= line) {
+          about = true;
+        }
+        const doc = document.documentElement;
+        if (window.scrollY + window.innerHeight >= doc.scrollHeight - 60) {
+          about = true;
+        }
+
+        setActive(about ? -1 : act);
+
+        // No mobile "expanded"/"about" é o menu fullscreen — o scroll não deve abri-lo.
+        if (window.innerWidth < 860) return;
+        if (about !== wasAboutRef.current) {
+          wasAboutRef.current = about;
+          setState((prev) => {
+            if (about) return prev === "compact" ? prev : "about";
+            return prev === "about" ? "expanded" : prev;
+          });
         }
       });
-
-      const aboutEl = document.getElementById("about-me");
-      if (aboutEl && aboutEl.getBoundingClientRect().top + window.scrollY <= line) {
-        about = true;
-      }
-      const doc = document.documentElement;
-      if (window.scrollY + window.innerHeight >= doc.scrollHeight - 60) {
-        about = true;
-      }
-
-      setActive(about ? -1 : act);
-
-      // No mobile "expanded"/"about" é o menu fullscreen — o scroll não deve abri-lo.
-      if (window.innerWidth < 860) return;
-      if (about !== wasAboutRef.current) {
-        wasAboutRef.current = about;
-        setState((prev) => {
-          if (about) return prev === "compact" ? prev : "about";
-          return prev === "about" ? "expanded" : prev;
-        });
-      }
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
   }, [items, setState]);
 
   const handleClick = (

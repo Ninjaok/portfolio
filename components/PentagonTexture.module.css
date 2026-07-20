@@ -12,7 +12,17 @@
      height:auto e contain:strict a altura intrínseca conta como 0 e o
      bottom é ignorado, colapsando a camada para 0px (padrão invisível). */
   height: 100%;
-  width: 100%;
+  /* Largura em CSS puro (100vw + a folga de 2×EDGE do componente, 22px em
+     lib PentagonTexture.tsx — manter em sincronia), não via inline style
+     calculado em JS: assim a caixa já nasce com o tamanho final no SSR e
+     nunca muda depois de montar. Antes, o width só ficava certo depois de
+     um efeito ler window.innerWidth, e essa troca de tamanho pós-hydration
+     era contabilizada como layout shift (CLS) mesmo sendo um elemento
+     absolutamente posicionado — era o maior ofensor do CLS 0.832 do
+     PageSpeed. Troca: 100vw pode divergir de window.innerWidth em ~15-17px
+     por causa da scrollbar em alguns browsers; a folga de 44px absorve isso
+     com margem (o excesso extra fica sob a sidebar/fora do ecrã). */
+  width: calc(100vw + 44px);
   color: var(--accent);
   opacity: 0.22;
   pointer-events: none;
