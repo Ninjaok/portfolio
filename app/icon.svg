@@ -1,18 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
-  <!-- Favicon: versão PREENCHIDA do logo (logo/sun-logo.svg), não a de
-       contorno usada no site.
+  <!-- Favicon: o logo de CONTORNO (logo/sun-logo.svg), com o mesmo
+       tratamento do apple-touch-icon do pacote de marca — fundo oliva com
+       cantos arredondados.
 
-       A arte original é traço de 4.2 num viewBox de 200 — a 16px isso dá
-       0.34px, sub-pixel, e o ícone renderiza como uma mancha ilegível.
-       Engrossar o traço também não resolve: os cinco losangos colam-se e
-       viram ruído. A silhueta cheia é o que se lê a 16px.
+       O fundo é o que faz o contorno funcionar em tamanho pequeno. A
+       primeira versão deste ficheiro tinha fundo transparente, e aí um
+       traço fino sobre a barra do browser desaparecia; a tentativa
+       seguinte, de preencher a silhueta, resolvia a legibilidade mas
+       perdia o desenho. Contorno + fundo mantém as duas coisas.
 
-       Fundo oliva fixo (sem prefers-color-scheme): dá presença ao separador
-       e tem contraste suficiente contra barras claras E escuras, por isso
-       não precisa de variante por tema — menos uma coisa para divergir. -->
-  <rect width="200" height="200" rx="44" fill="#2b2e1f"></rect>
-  <g transform="translate(100,100) scale(1.3) translate(-100,-100)"
-     fill="#a8b57a" stroke="#a8b57a" stroke-width="7" stroke-linejoin="round">
+       Traço a 8 (a arte usa 4.2): a 32px — o tamanho a que os ecrãs retina
+       desenham o favicon — dá 1.28px, uma linha nítida.
+
+       Fundo fixo, sem prefers-color-scheme: contrasta com barras claras e
+       escuras, logo não precisa de duas variantes que possam divergir. -->
+  <rect width="200" height="200" rx="44" fill="#22251a"></rect>
+  <g fill="none" stroke="#a8b57a" stroke-width="8" stroke-linejoin="round" stroke-linecap="round">
     <path d="M 94.97 102.53 L 75.31 58.35 L 111.24 26.00 L 130.91 70.17 Z"></path>
     <path d="M 94.97 102.53 L 130.91 70.17 L 172.78 94.35 L 136.85 126.70 Z"></path>
     <path d="M 94.97 102.53 L 136.85 126.70 L 126.80 174.00 L 84.92 149.82 Z"></path>
