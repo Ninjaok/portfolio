@@ -1,15 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
-  <!-- Favicon do site (logo/sun-logo.svg). O traço segue o tema do SISTEMA
-       via prefers-color-scheme: oliva #6b7a3f para a barra de separadores
-       clara, sage #a8b57a para a escura — nas duas o contraste aguenta os
-       16px. Um SVG servido como favicon avalia as suas próprias media
-       queries, por isso isto funciona sem JS e sem dois ficheiros.
-       Sem <rect> de fundo: transparente assenta melhor em qualquer barra. -->
-  <style>
-    .s { stroke: #6b7a3f; }
-    @media (prefers-color-scheme: dark) { .s { stroke: #a8b57a; } }
-  </style>
-  <g class="s" fill="none" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+  <!-- Favicon: versão PREENCHIDA do logo (logo/sun-logo.svg), não a de
+       contorno usada no site.
+
+       A arte original é traço de 4.2 num viewBox de 200 — a 16px isso dá
+       0.34px, sub-pixel, e o ícone renderiza como uma mancha ilegível.
+       Engrossar o traço também não resolve: os cinco losangos colam-se e
+       viram ruído. A silhueta cheia é o que se lê a 16px.
+
+       Fundo oliva fixo (sem prefers-color-scheme): dá presença ao separador
+       e tem contraste suficiente contra barras claras E escuras, por isso
+       não precisa de variante por tema — menos uma coisa para divergir. -->
+  <rect width="200" height="200" rx="44" fill="#2b2e1f"></rect>
+  <g transform="translate(100,100) scale(1.3) translate(-100,-100)"
+     fill="#a8b57a" stroke="#a8b57a" stroke-width="7" stroke-linejoin="round">
     <path d="M 94.97 102.53 L 75.31 58.35 L 111.24 26.00 L 130.91 70.17 Z"></path>
     <path d="M 94.97 102.53 L 130.91 70.17 L 172.78 94.35 L 136.85 126.70 Z"></path>
     <path d="M 94.97 102.53 L 136.85 126.70 L 126.80 174.00 L 84.92 149.82 Z"></path>
